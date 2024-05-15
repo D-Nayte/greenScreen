@@ -1,0 +1,46 @@
+{
+  "generall": {
+    "temperature": {
+      "min": 20,
+      "max": 30,
+      "active": true,
+      "current": 25,
+      "sensor": 1
+    },
+    "humidityAir": {
+      "min": 40,
+      "max": 60,
+      "active": true,
+      "current": 50,
+      "sensor": 2
+    },
+    "light": {
+      "active": true,
+      "current": 1,
+      "sensor": 3
+    },
+    "fan": {
+      "active": true,
+      "current": 0,
+      "sensor": 4
+    }
+  },
+  "plantConfig": [
+    {
+      "id": "1",
+      "soilName": "Composit",
+      "name": "Tomato",
+      "humiditySoil": "50",
+      "waterOn": "",
+      "usehumiditySoil": false
+    },
+    {
+      "id": "2",
+      "soilName": "Composit",
+      "name": "Cucumber",
+      "humiditySoil": "50",
+      "waterOn": "",
+      "usehumiditySoil": true
+    }
+  ]
+}
