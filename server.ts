@@ -12,7 +12,7 @@ export interface ServerToClientEvents {
   basicEmit: (a: number, b: string, c: Buffer) => void;
   withAck: (d: string, callback: (e: number) => void) => void;
   sendAlltestMessage: (data: string) => void;
-  sendData: (data: any) => void;
+  sendData: (data: Data) => void;
 }
 
 export interface ClientToServerEvents {
@@ -33,7 +33,6 @@ export interface SocketData {
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
-// const PORT = process.env.WEBSOCKET_PORT || 5555;
 const PORT = process.env.WEBSOCKET_PORT || 3000;
 
 const readData = () => {

@@ -17,7 +17,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: JSX.Element }) {
   return (
     <html lang="en">
-      <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
+      <body
+        className={cn(
+          'min-h-screen bg-background font-sans antialiased overflow-hidden flex flex-row border',
+          fontSans.variable
+        )}
+      >
         <WebSocketWrapper>{children}</WebSocketWrapper>
       </body>
     </html>

@@ -71,14 +71,56 @@
   }
 }
 
-/* .myPadding {
-  padding: 5px 10px;
-} */
-
 @layer utilities {
   .myPadding {
     @apply py-4 px-1.5;
   }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.temp {
+  @apply bg-secondary fill-red-500  text-secondary-foreground;
+
+  font-size: 23px;
+  background-color: transparent;
+}
+
+.humidityAir {
+  @apply bg-accent text-accent-foreground;
+
+  font-size: 23px;
+  fill: blue;
+  background-color: transparent;
+}
+
+.fan {
+  @apply bg-primary fill-primary-secondary text-primary-foreground;
+
+  font-size: 16px;
+  background-color: transparent;
+}
+
+.fan.active {
+  animation: infinite 2s linear animFan;
+}
+
+@keyframes animFan {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.light {
+  @apply bg-primary fill-orange-500 text-primary-foreground;
+
+  font-size: 25px;
+  background-color: transparent;
 }
 
 @layer base {
@@ -87,5 +129,46 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+.drop {
+  opacity: 0.3;
+}
+
+.animateDrop {
+  fill: #00aaff;
+  opacity: 0;
+  animation: blink 2.5s infinite;
+}
+
+.drop:nth-child(1) {
+  animation-delay: 0s;
+  transform: translate(6px, -10px);
+  font-size: 10px;
+  z-index: 1;
+}
+
+.drop:nth-child(2) {
+  animation-delay: 0.5s;
+  font-size: 15px;
+  transform: translate(0, -5px);
+
+  z-index: 2;
+}
+
+.drop:nth-child(3) {
+  animation-delay: 1.8s;
+  font-size: 8px;
+  transform: translate(-3px, -5px);
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
   }
 }

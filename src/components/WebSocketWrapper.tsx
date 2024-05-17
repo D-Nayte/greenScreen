@@ -6,7 +6,7 @@ import { ReactNode, useEffect } from 'react';
 
 const WebSocketWrapper = ({ children }: { children: ReactNode }) => {
   const { _receiveMessage, socket } = useSocket();
-  const { data, setData } = useData();
+  const { _setData } = useData();
 
   useEffect(() => {
     socket.on('sendAlltestMessage', (data) => {
@@ -16,12 +16,15 @@ const WebSocketWrapper = ({ children }: { children: ReactNode }) => {
     });
 
     socket.on('sendData', (data) => {
-      console.log('Recieved DATA! ::', data);
-
-      setData(data);
+      _setData(data);
     });
 
-    console.log('socket :>> ', socket);
+    // eslint-disable-next-line
+
+    return () => {
+      socket.off('sendAlltestMessage');
+      socket.off('sendData');
+    };
 
     // eslint-disable-next-line
   }, [socket]);

@@ -2,45 +2,81 @@
   "generall": {
     "temperature": {
       "min": 22,
-      "max": 28,
+      "max": 25,
       "active": true,
       "current": 25,
-      "sensor": 1
+      "sensor": 9
     },
     "humidityAir": {
-      "min": 40,
-      "max": 60,
+      "min": 41,
+      "max": 74,
       "active": true,
       "current": 50,
-      "sensor": 2
+      "sensor": 4
     },
     "light": {
       "active": true,
       "current": 1,
-      "sensor": 3
+      "sensor": 2
     },
     "fan": {
       "active": true,
-      "current": 0,
-      "sensor": 4
+      "current": 1,
+      "sensor": 1
     }
   },
   "plantConfig": [
     {
-      "id": "1",
-      "soilName": "Composit",
-      "name": "Tomato",
-      "humiditySoil": "50",
-      "waterOn": "",
-      "usehumiditySoil": false
+      "id": 1,
+      "soilName": "Composit light Mix",
+      "name": "Paprika",
+      "humiditySoil": "20",
+      "waterOn": true,
+      "usehumiditySoil": true,
+      "soilSensor": 6,
+      "usePump": true,
+      "pumpSensor": 18,
+      "startPump": 1,
+      "stopPump": 2
     },
     {
-      "id": "2",
+      "id": 2,
       "soilName": "Composit",
       "name": "Cucumber",
       "humiditySoil": "50",
-      "waterOn": "",
-      "usehumiditySoil": true
+      "waterOn": false,
+      "usehumiditySoil": true,
+      "soilSensor": 7,
+      "usePump": true,
+      "pumpSensor": 18,
+      "startPump": 1,
+      "stopPump": 2
+    },
+    {
+      "id": 3,
+      "soilName": "Composit",
+      "name": "Banana",
+      "humiditySoil": "70",
+      "waterOn": false,
+      "usehumiditySoil": true,
+      "soilSensor": 7,
+      "usePump": true,
+      "pumpSensor": 18,
+      "startPump": 1,
+      "stopPump": 2
+    },
+    {
+      "id": 4,
+      "name": "Tomato",
+      "soilName": "no clue",
+      "humiditySoil": "",
+      "waterOn": false,
+      "soilSensor": null,
+      "pumpSensor": null,
+      "usehumiditySoil": false,
+      "usePump": false,
+      "startPump": 0,
+      "stopPump": 1
     }
   ]
 }

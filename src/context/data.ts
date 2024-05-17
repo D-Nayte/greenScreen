@@ -16,7 +16,7 @@ export type Data = {
       max: number;
       active: boolean;
       current: number;
-      sensor: number;
+      sensor: number | null;
     };
     light: {
       active: boolean;
@@ -30,24 +30,29 @@ export type Data = {
     };
   };
   plantConfig: {
-    id: string;
+    id: number;
     soilName: string;
     name: string;
     humiditySoil: string;
-    waterOn: string;
+    waterOn: boolean;
     usehumiditySoil: boolean;
+    soilSensor: number | null;
+    usePump: boolean;
+    pumpSensor: number | null;
+    startPump: number;
+    stopPump: number;
   }[];
 };
 
 type SocketState = {
   data: Data | null;
-  setData: (data: Data) => void;
+  _setData: (data: Data) => void;
 };
 
 export const useData = create<SocketState>((set) => ({
   data: null,
 
-  setData: (receivedData) => {
+  _setData: (receivedData) => {
     set(() => ({ data: receivedData }));
   },
 }));
