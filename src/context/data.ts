@@ -23,6 +23,13 @@ export type Data = {
       current: number;
       sensor: number;
     };
+    pressure: {
+      min: number;
+      max: number;
+      active: boolean;
+      current: number;
+      sensor: number;
+    };
     fan: {
       active: boolean;
       current: number;

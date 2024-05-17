@@ -3,10 +3,11 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
+    "target": "ES2022",
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "ESNext",
+    "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -27,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/server.mts",
-    "src/context/sockets.mts"
+    "src/context/sockets.mts",
+    "sensor/indexCopy.js"
   ],
   "exclude": ["node_modules"]
 }

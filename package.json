@@ -24,6 +24,7 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.12.12",
     "axios": "^1.6.8",
+    "bme280-sensor": "^0.1.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "concurrently": "^8.2.2",

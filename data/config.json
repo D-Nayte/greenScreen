@@ -4,14 +4,14 @@
       "min": 22,
       "max": 25,
       "active": true,
-      "current": 25,
+      "current": 23.03,
       "sensor": 9
     },
     "humidityAir": {
       "min": 41,
       "max": 74,
       "active": true,
-      "current": 50,
+      "current": 46.93,
       "sensor": 4
     },
     "light": {
@@ -23,6 +23,13 @@
       "active": true,
       "current": 1,
       "sensor": 1
+    },
+    "pressure": {
+      "min": 1000,
+      "max": 1010,
+      "active": true,
+      "current": 985.31,
+      "sensor": 3
     }
   },
   "plantConfig": [
