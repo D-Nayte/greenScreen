@@ -1,6 +1,13 @@
 // @ts-nocheck
 
-import BME280 from "bme280-sensor";
+let BME280;
+
+if (process.platform === 'linux') {
+  BME280 = await import('bme280-sensor');
+} else {
+  const { MockI2CBus } = await import('./mock-ic2-bus');
+  BME280 = MockI2CBus;
+}
 
 // Konfiguration für den Sensor
 const options = {
@@ -22,5 +29,5 @@ export const readEnvSensor = async (): Promise<EnvSensorData | undefined> => {
 try {
   await bme280.init();
 } catch (error) {
-  console.error("Error Reading Enviroment Sensor", error);
+  console.error('Error Reading Enviroment Sensor', error);
 }

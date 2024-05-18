@@ -4,14 +4,14 @@
       "min": 22,
       "max": 25,
       "active": true,
-      "current": 23.03,
+      "current": 20,
       "sensor": 9
     },
     "humidityAir": {
       "min": 41,
       "max": 74,
       "active": true,
-      "current": 46.93,
+      "current": 50,
       "sensor": 4
     },
     "light": {
@@ -28,7 +28,7 @@
       "min": 1000,
       "max": 1010,
       "active": true,
-      "current": 985.31,
+      "current": 1013.25,
       "sensor": 3
     }
   },

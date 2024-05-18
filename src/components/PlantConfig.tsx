@@ -24,6 +24,8 @@ type Props = {
   noDelete?: boolean;
 };
 
+console.log('process.env.NODE :>> ', process.env.NODE_ENV);
+
 const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
   const [plantCopy, setplantCopy] = useState(JSON.parse(JSON.stringify(plant)));
   const [hasChanged, sethasChanged] = useState(false);

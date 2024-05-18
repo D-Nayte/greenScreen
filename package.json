@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev-old": "next dev",
-    "dev": "nodemon server.ts",
+    "dev": "nodemon server.ts --dev",
     "build": "next build",
-    "start": "next start",
+    "start-old": "next start",
+    "start": "nodemon server.ts --prod",
     "lint": "next lint",
     "dev1": "concurrently \"npm run client:dev\" \"npm run server:dev\""
   },

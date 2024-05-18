@@ -29,7 +29,8 @@
     ".next/types/**/*.ts",
     "src/server.mts",
     "src/context/sockets.mts",
-    "sensor/indexCopy.js"
+    "sensor/indexCopy.js",
+    "sensor/copy.js"
   ],
   "exclude": ["node_modules"]
 }
