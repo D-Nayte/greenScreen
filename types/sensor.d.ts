@@ -1,4 +1,4 @@
-declare module 'bme280-sensor';
+declare module "bme280-sensor";
 
 export declare type EnvSensorData = {
   temperature_C: number;
