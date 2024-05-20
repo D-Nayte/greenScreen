@@ -23,11 +23,11 @@ const PlantCard = ({ plant }: PlantCardProps) => {
       <CardHeader className="p-2">
         <CardTitle className="text-center">{plant.name}</CardTitle>
         <CardDescription className="flex items-center justify-center ">
-          <div className="flex gap-1 ">
+          <span className="flex gap-1 ">
             <GiGroupedDrops
               className={`${!usehumiditySoil ? 'opacity-20' : 'fill-blue'} text-lg`}
             />
-          </div>
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent className="p-2 flex flex-col items-start justify-start text-xs">

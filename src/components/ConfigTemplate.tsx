@@ -72,7 +72,6 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
 
   const handleSensorChange = (sensor: number, field: GenerellConfigKeys) => {
     if (!dataCopy.generall) return;
-    console.log('RUNN!');
 
     dataCopy.generall[field].sensor = sensor;
 

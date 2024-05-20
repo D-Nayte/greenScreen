@@ -3,7 +3,7 @@ import { EnvSensorData } from '../types/sensor';
 export class MockI2CBus {
   constructor() {}
   async init() {
-    console.log('Mocking I2C Bus - RUNN');
+    console.info('Mocking I2C Bus - RUNN');
   }
 
   async readSensorData(): Promise<EnvSensorData> {
@@ -13,5 +13,4 @@ export class MockI2CBus {
       pressure_hPa: 1013.25,
     };
   }
-  // Mock-Funktionen hier hinzufügen
 }

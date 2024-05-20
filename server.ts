@@ -3,17 +3,18 @@ import next from 'next';
 import http from 'http';
 import { Server } from 'socket.io';
 import { config } from 'dotenv';
-import fs from 'fs';
 import { Data } from '@/context/data';
-import { readEnvSensor } from './sensor/index';
+import { handleEnvChange } from './sensor/envSensor';
+import { getConfigData, writeData } from './utils/readConfig';
+import { SECOND_IN_MS } from './utils/constant';
 config();
 
 export interface ServerToClientEvents {
   noArg: () => void;
   basicEmit: (a: number, b: string, c: Buffer) => void;
   withAck: (d: string, callback: (e: number) => void) => void;
-  sendAlltestMessage: (data: string) => void;
   sendData: (data: Data) => void;
+  sendConfig: (data: Data) => void;
 }
 
 export interface ClientToServerEvents {
@@ -37,31 +38,14 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 const PORT = process.env.WEBSOCKET_PORT || 3000;
 
-const readData = () => {
-  const data = fs.readFileSync('./data/config.json', 'utf8');
-  return JSON.parse(data) as Data;
+const readSensors = async () => {
+  const shouldWriteData = { change: false };
+  const configData = getConfigData();
+
+  await handleEnvChange(configData, shouldWriteData);
+
+  return shouldWriteData.change ? writeData(configData) : configData;
 };
-
-const writeData = (data: Data) => {
-  fs.writeFileSync('./data/config.json', JSON.stringify(data, null, 2), 'utf8');
-  const newData = readData();
-  return newData;
-};
-
-const writeEnvSensorData = async () => {
-  const sensorData = await readEnvSensor();
-  if (!sensorData) return;
-  const config = readData();
-  config.generall.humidityAir.current = parseFloat(sensorData?.humidity.toFixed(2));
-  config.generall.temperature.current = parseFloat(sensorData?.temperature_C.toFixed(2));
-  config.generall.pressure.current = parseFloat(sensorData?.pressure_hPa.toFixed(2));
-
-  writeData(config);
-};
-
-// setInterval(() => {
-writeEnvSensorData();
-// }, 2000);
 
 app.prepare().then(async () => {
   const server = express();
@@ -76,22 +60,24 @@ app.prepare().then(async () => {
   );
 
   io.on('connection', (socket) => {
-    console.log('Client connected');
-
-    socket.on('message', (data) => {
-      io.emit('sendAlltestMessage', data);
-    });
+    console.info('Client connected');
 
     socket.on('setData', (data: Data) => {
       const newData = writeData(data);
 
-      io.emit('sendData', newData);
+      io.emit('sendConfig', newData);
     });
 
-    socket.on('getData', () => {
-      const data = readData();
+    socket.on('getData', async () => {
+      const data = getConfigData();
       io.emit('sendData', data);
     });
+
+    setInterval(async () => {
+      const data = await readSensors();
+
+      io.emit('sendData', data);
+    }, SECOND_IN_MS[3]);
   });
 
   server.all('*', (req, res) => {
@@ -99,6 +85,6 @@ app.prepare().then(async () => {
   });
 
   httpServer.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.info(`Server is running on http://localhost:${PORT}`);
   });
 });

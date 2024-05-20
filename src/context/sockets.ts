@@ -10,7 +10,6 @@ export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(`/`
 type SocketState = {
   message: string | null;
   socket: typeof socket;
-  _receiveMessage: (message: string) => void;
   sendMessage: (message: string) => void;
   setData: (data: Data) => void;
 };
@@ -18,8 +17,6 @@ type SocketState = {
 export const useSocket = create<SocketState>((set) => ({
   message: null,
   socket,
-
-  _receiveMessage: (message: string) => set((state) => ({ ...state, message })),
 
   sendMessage: (message: string) => {
     socket.emit('message', message);
