@@ -1,6 +1,6 @@
 //ts-nocheck
 
-import i2c from 'i2c-bus';
+import i2c from "i2c-bus";
 
 // Die I2C-Busnummer kann je nach Raspberry Pi-Modell variieren. Normalerweise ist es 1.
 export const scanBus = () => {
@@ -11,7 +11,7 @@ export const scanBus = () => {
   const START_ADDR = 0x03;
   const END_ADDR = 0x77;
 
-  console.info('Scanning I2C bus...');
+  console.info("Scanning I2C bus...");
 
   for (let addr = START_ADDR; addr <= END_ADDR; addr++) {
     try {
@@ -19,12 +19,13 @@ export const scanBus = () => {
       console.info(`Device found at address 0x${addr.toString(16)}`);
     } catch (e: any) {
       // Ein Fehler wird erwartet, wenn kein Gerät an dieser Adresse vorhanden ist.
-      if (e.code !== 'ENODEV' && e.code !== 'EIO') {
+      if (e.code !== "ENODEV" && e.code !== "EIO") {
         console.error(`Error at address 0x${addr.toString(16)}:`, e.message);
       }
     }
   }
 
   bus.closeSync();
-  console.info('Scan complete.');
+  console.info("Scan complete.");
 };
+scanBus();

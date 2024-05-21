@@ -30,7 +30,8 @@
     "src/server.mts",
     "src/context/sockets.mts",
     "sensor/indexCopy.js",
-    "sensor/copy.js"
+    "sensor/copy.js",
+    "sensor/gipoCopy.js"
   ],
   "exclude": ["node_modules"]
 }
