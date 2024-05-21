@@ -7,6 +7,7 @@ import { Data } from '@/context/data';
 import { handleEnvChange } from './sensor/envSensor';
 import { getConfigData, writeData } from './utils/readConfig';
 import { SECOND_IN_MS } from './utils/constant';
+
 config();
 
 export interface ServerToClientEvents {
