@@ -1,16 +1,16 @@
 {
   "generall": {
     "temperature": {
-      "min": 18,
-      "max": 19,
+      "min": 21,
+      "max": 23,
       "active": true,
-      "current": 27.09
+      "current": 20
     },
     "humidityAir": {
       "min": 41,
       "max": 74,
       "active": true,
-      "current": 44.91
+      "current": 50
     },
     "light": {
       "active": true,
@@ -18,14 +18,14 @@
     },
     "fan": {
       "active": true,
-      "current": 1,
+      "current": 0,
       "sensor": "A/7"
     },
     "pressure": {
       "min": 1000,
       "max": 1010,
       "active": true,
-      "current": 988.62
+      "current": 1013.25
     }
   },
   "plantConfig": [

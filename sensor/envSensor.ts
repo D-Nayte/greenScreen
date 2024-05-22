@@ -1,14 +1,14 @@
 // @ts-nocheck
 
-import { Data } from "../types/sensor";
+import { Data } from '../types/sensor';
 
 let BME280;
 
-if (process.platform === "linux") {
-  const { default: BME280Class } = await import("bme280-sensor");
+if (process.platform === 'linux') {
+  const { default: BME280Class } = await import('bme280-sensor');
   BME280 = BME280Class;
 } else {
-  const { MockI2CBus } = await import("./mock-ic2-bus");
+  const { MockI2CBus } = await import('./mock-ic2-bus');
   BME280 = MockI2CBus;
 }
 
@@ -42,10 +42,7 @@ export const readEnvSensor = async (): Promise<EnvData> => {
   }
 };
 
-export const handleEnvChange = async (
-  { generall }: Data,
-  shouldWriteData: { change: boolean }
-) => {
+export const handleEnvChange = async ({ generall }: Data, shouldWriteData: { change: boolean }) => {
   const envData = await readEnvSensor();
 
   if (!envData) throw new Error("Couldn't read env data sesnor");
@@ -53,16 +50,24 @@ export const handleEnvChange = async (
   generall.humidityAir.current = envData.humidity;
   generall.pressure.current = envData.pressure;
 
+  console.log('envData :>> ', envData);
+
   const tempAboveMax = envData.temperature > generall.temperature.max;
   const tempBelowMin = envData.temperature < generall.temperature.min;
   const tempInRange =
     envData.temperature >= generall.temperature.min &&
     envData.temperature <= generall.temperature.max;
-  const fanisOff = !generall.fan.current;
+  const fanisOff = generall.fan.current === 0;
+
+  console.log('tempInRange :>> ', tempInRange);
 
   if (!tempInRange && generall.fan.active) {
+    console.log('!fanisOff :>> ', !fanisOff);
     const fanShouldBeActive = tempAboveMax && fanisOff;
     const fanShouldBeInactive = tempBelowMin && !fanisOff;
+
+    console.log('fanShouldBeActive :>> ', fanShouldBeActive);
+    console.log('fanShouldBeInactive :>> ', fanShouldBeInactive);
 
     if (fanShouldBeActive || fanShouldBeInactive) {
       shouldWriteData.change = true;
@@ -74,5 +79,5 @@ export const handleEnvChange = async (
 try {
   await bme280.init();
 } catch (error) {
-  console.error("Error Reading Enviroment Sensor", error);
+  console.error('Error Reading Enviroment Sensor', error);
 }
