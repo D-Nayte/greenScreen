@@ -10,7 +10,9 @@
     "start-old": "next start",
     "start": "nodemon server.ts --prod",
     "lint": "next lint",
-    "dev1": "concurrently \"npm run client:dev\" \"npm run server:dev\""
+    "dev1": "concurrently \"npm run client:dev\" \"npm run server:dev\"",
+    "py:venv": "python3 -m venv pythonVirtual",
+    "py:adc": "pythonVirtual/bin/python3 sensor/adc.py"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",

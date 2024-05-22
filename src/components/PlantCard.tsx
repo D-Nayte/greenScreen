@@ -5,13 +5,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { GiGroupedDrops } from 'react-icons/gi';
-import { FaDroplet } from 'react-icons/fa6';
-import { Data } from '@/context/data';
+} from "@/components/ui/card";
+import { GiGroupedDrops } from "react-icons/gi";
+import { FaDroplet } from "react-icons/fa6";
+import { Data } from "../../types/sensor";
 
 type PlantCardProps = {
-  plant: Data['plantConfig'][0];
+  plant: Data["plantConfig"][0];
 };
 
 const PlantCard = ({ plant }: PlantCardProps) => {
@@ -25,7 +25,9 @@ const PlantCard = ({ plant }: PlantCardProps) => {
         <CardDescription className="flex items-center justify-center ">
           <span className="flex gap-1 ">
             <GiGroupedDrops
-              className={`${!usehumiditySoil ? 'opacity-20' : 'fill-blue'} text-lg`}
+              className={`${
+                !usehumiditySoil ? "opacity-20" : "fill-blue"
+              } text-lg`}
             />
           </span>
         </CardDescription>
@@ -36,18 +38,24 @@ const PlantCard = ({ plant }: PlantCardProps) => {
         </p>
         <p>
           <span className=" font-semibold ">Humidity:</span>
-          {usehumiditySoil ? ` ${plant.humiditySoil}%` : '-'}
+          {usehumiditySoil ? ` ${plant.humiditySoil}%` : "-"}
         </p>
         <p>
           <span className=" font-semibold ">Sensor:</span>
-          {usehumiditySoil ? ` ${plant.soilSensor}` : '-'}
+          {usehumiditySoil ? ` ${plant.soilSensor}` : "-"}
         </p>
       </CardContent>
       <CardFooter className="basis-full p-0 mt-1 flex items-end justify-end ">
         <div className="w-full flex justify-center ">
-          <FaDroplet className={`${irrigating ? 'drop animateDrop' : 'drop opacity-20'}`} />
-          <FaDroplet className={`${irrigating ? 'drop animateDrop' : 'drop opacity-20'}`} />
-          <FaDroplet className={`${irrigating ? 'drop animateDrop' : 'drop opacity-20'}`} />
+          <FaDroplet
+            className={`${irrigating ? "drop animateDrop" : "drop opacity-20"}`}
+          />
+          <FaDroplet
+            className={`${irrigating ? "drop animateDrop" : "drop opacity-20"}`}
+          />
+          <FaDroplet
+            className={`${irrigating ? "drop animateDrop" : "drop opacity-20"}`}
+          />
         </div>
       </CardFooter>
     </Card>

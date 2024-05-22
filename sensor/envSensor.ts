@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { Data } from "@/context/data";
+import { Data } from "../types/sensor";
 
 let BME280;
 
@@ -48,19 +48,19 @@ export const handleEnvChange = async (
 ) => {
   const envData = await readEnvSensor();
 
-  if (!envData) return;
+  if (!envData) throw new Error("Couldn't read env data sesnor");
   generall.temperature.current = envData.temperature;
   generall.humidityAir.current = envData.humidity;
   generall.pressure.current = envData.pressure;
 
   const tempAboveMax = envData.temperature > generall.temperature.max;
   const tempBelowMin = envData.temperature < generall.temperature.min;
-  const tempinRange =
+  const tempInRange =
     envData.temperature >= generall.temperature.min &&
     envData.temperature <= generall.temperature.max;
   const fanisOff = !generall.fan.active;
 
-  if (!tempinRange) {
+  if (!tempInRange) {
     const fanShouldBeActive = tempAboveMax && fanisOff;
     const fanShouldBeInactive = tempBelowMin && !fanisOff;
 
@@ -73,7 +73,7 @@ export const handleEnvChange = async (
 
 try {
   await bme280.init();
-  console.log("readEnvSensor() :>> ", await readEnvSensor());
+ 
 } catch (error) {
   console.error("Error Reading Enviroment Sensor", error);
 }

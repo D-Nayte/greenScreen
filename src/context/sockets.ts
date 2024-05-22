@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { create } from 'zustand';
-import { Data } from './data';
-import { io, Socket } from 'socket.io-client';
-import { ClientToServerEvents, ServerToClientEvents } from '../../server';
+import { create } from "zustand";
+import { io, Socket } from "socket.io-client";
+import { ClientToServerEvents, ServerToClientEvents } from "../../server";
+import { Data } from "../../types/sensor";
 
-export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(`/`);
+export const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
+  io(`/`);
 
 type SocketState = {
   message: string | null;
@@ -19,11 +20,11 @@ export const useSocket = create<SocketState>((set) => ({
   socket,
 
   sendMessage: (message: string) => {
-    socket.emit('message', message);
+    socket.emit("message", message);
     return;
   },
   setData: (data) => {
-    socket.emit('setData', data);
+    socket.emit("setData", data);
     return;
   },
 }));

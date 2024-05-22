@@ -1,14 +1,14 @@
-import { Slider } from '@/components/ui/slider';
-import { useMemo, useState } from 'react';
-import { useSocket } from '@/context/sockets';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { Slider } from "@/components/ui/slider";
+import { useMemo, useState } from "react";
+import { useSocket } from "@/context/sockets";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import SelectSensor from "./SelectSensor";
+import { useData } from "@/context/data";
+import { Data } from "../../types/sensor";
 
-import SelectSensor from './SelectSensor';
-import { useData, Data } from '@/context/data';
-
-type GenerellConfigKeys = 'temperature' | 'humidityAir' | 'light' | 'fan';
-type TempHumidity = 'temperature' | 'humidityAir';
+type GenerellConfigKeys = "temperature" | "humidityAir" | "light" | "fan";
+type TempHumidity = "temperature" | "humidityAir";
 
 type ConfigTemplateProps<T extends GenerellConfigKeys> = T extends TempHumidity
   ? {
@@ -39,7 +39,7 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
   const { setData } = useSocket();
   const { data } = useData();
   const dataCopy = useMemo(() => ({ ...data }), [data]) as Data;
-  const hasMinMaxConfigs = config === 'temperature' || config === 'humidityAir';
+  const hasMinMaxConfigs = config === "temperature" || config === "humidityAir";
   const [value, setValue] = useState(
     hasMinMaxConfigs
       ? {
@@ -49,7 +49,11 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
       : {}
   );
 
-  const handleTempChange = (temp: number, key: 'min' | 'max', unit: TempHumidity) => {
+  const handleTempChange = (
+    temp: number,
+    key: "min" | "max",
+    unit: TempHumidity
+  ) => {
     if (!dataCopy.generall) return;
     setValue((prev) => ({ ...prev, [key]: temp }));
 
@@ -81,11 +85,14 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
   if (!data) return null;
 
   return (
-    <div className="flex flex-col gap-2 pt-1" style={{ zIndex: '10' }}>
+    <div className="flex flex-col gap-2 pt-1" style={{ zIndex: "10" }}>
       {hasMinMaxConfigs && (
         <>
           <div className="flex ">
-            <p className={`mr-12 basis-32 ${!data.generall[config].active && 'text-gray-400'}`}>
+            <p
+              className={`mr-12 basis-32 ${
+                !data.generall[config].active && "text-gray-400"
+              }`}>
               min {value.min} {unit}
             </p>
             <Slider
@@ -95,11 +102,14 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
               step={1}
               disabled={!data.generall[config].active}
               value={[minValue]}
-              onValueChange={(e) => handleTempChange(e[0], 'min', config)}
+              onValueChange={(e) => handleTempChange(e[0], "min", config)}
             />
           </div>
           <div className="flex">
-            <p className={`mr-12 basis-32 ${!data.generall[config].active && 'text-gray-400'}`}>
+            <p
+              className={`mr-12 basis-32 ${
+                !data.generall[config].active && "text-gray-400"
+              }`}>
               max {value.max} {unit}
             </p>
             <Slider
@@ -109,7 +119,7 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
               step={1}
               disabled={!data.generall[config].active}
               value={[maxValue]}
-              onValueChange={(e) => handleTempChange(e[0], 'max', config)}
+              onValueChange={(e) => handleTempChange(e[0], "max", config)}
             />
           </div>
         </>
@@ -117,7 +127,9 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
 
       <div className="flex items-center space-x-2 mt-1 justify-between">
         <div className="flex items-center gap-1">
-          <Label htmlFor="temp">{data.generall[config].active ? 'Activated' : 'Disabled'}</Label>
+          <Label htmlFor="temp">
+            {data.generall[config].active ? "Activated" : "Disabled"}
+          </Label>
           <Switch
             id="temp"
             checked={data.generall[config].active}
@@ -128,7 +140,9 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
         <div className="flex items-center gap-1 ">
           <SelectSensor
             value={data.generall[config].sensor?.toString()}
-            onSenorChange={(value) => handleSensorChange(parseInt(value), config)}
+            onSenorChange={(value) =>
+              handleSensorChange(parseInt(value), config)
+            }
             disabled={!data.generall[config].active}
           />
         </div>

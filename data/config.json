@@ -4,14 +4,14 @@
       "min": 18,
       "max": 19,
       "active": true,
-      "current": 20,
+      "current": 31.54,
       "sensor": 9
     },
     "humidityAir": {
       "min": 41,
       "max": 74,
       "active": true,
-      "current": 50,
+      "current": 33.62,
       "sensor": 4
     },
     "light": {
@@ -28,7 +28,7 @@
       "min": 1000,
       "max": 1010,
       "active": true,
-      "current": 1013.25,
+      "current": 987.25,
       "sensor": 3
     }
   },
@@ -37,36 +37,36 @@
       "id": 1,
       "soilName": "Composit light Mix",
       "name": "Paprika",
-      "humiditySoil": "20",
+      "humiditySoil": "1.7",
       "waterOn": true,
       "usehumiditySoil": true,
-      "soilSensor": 6,
+      "soilSensor": "E/01",
       "usePump": true,
       "pumpSensor": 18,
-      "startPump": 1,
-      "stopPump": 2
+      "startPump": 10,
+      "stopPump": 50
     },
     {
       "id": 2,
-      "soilName": "Composit",
-      "name": "Cucumber",
-      "humiditySoil": "50",
+      "soilName": "Composit light Mix",
+      "name": "Tomato",
+      "humiditySoil": "2.6",
       "waterOn": false,
       "usehumiditySoil": true,
-      "soilSensor": 7,
+      "soilSensor": "E/01",
       "usePump": true,
       "pumpSensor": 18,
-      "startPump": 1,
+      "startPump": 10,
       "stopPump": 2
     },
     {
       "id": 3,
       "soilName": "Composit",
       "name": "Banana",
-      "humiditySoil": "70",
-      "waterOn": false,
+      "humiditySoil": "-5.5",
+      "waterOn": true,
       "usehumiditySoil": true,
-      "soilSensor": 7,
+      "soilSensor": null,
       "usePump": true,
       "pumpSensor": 18,
       "startPump": 1,
@@ -74,7 +74,7 @@
     },
     {
       "id": 4,
-      "name": "Tomato",
+      "name": "cucumber",
       "soilName": "no clue",
       "humiditySoil": "",
       "waterOn": false,
@@ -85,5 +85,81 @@
       "startPump": 0,
       "stopPump": 2
     }
-  ]
+  ],
+  "sensors": {
+    "adcSensors": {
+      "E/01": {
+        "address": "0x48",
+        "channel": "P0",
+        "h_0_min": 19707.133333333335,
+        "h_100_max": 10668.4,
+        "activeToId": 1,
+        "active": true
+      },
+      "E/02": {
+        "address": "0x48",
+        "channel": "P1",
+        "h_0_min": 19707.133333333335,
+        "h_100_max": 10668.4,
+        "activeToId": 2,
+        "active": false
+      },
+      "E/03": {
+        "address": "0x48",
+        "channel": "P2",
+        "h_0_min": 0,
+        "h_100_max": 0,
+        "activeToId": 3,
+        "active": false
+      },
+      "E/04": {
+        "address": "0x48",
+        "channel": "P3",
+        "h_0_min": 0,
+        "h_100_max": 0,
+        "activeToId": 4,
+        "active": false
+      },
+      "E/05": {
+        "address": "0x49",
+        "channel": "P0",
+        "h_0_min": 0,
+        "h_100_max": 0,
+        "activeToId": 5,
+        "active": false
+      },
+      "E/06": {
+        "address": "0x49",
+        "channel": "P1",
+        "h_0_min": 0,
+        "h_100_max": 0,
+        "activeToId": 6,
+        "active": false
+      },
+      "E/07": {
+        "address": "0x49",
+        "channel": "P2",
+        "h_0_min": 0,
+        "h_100_max": 0,
+        "activeToId": 7,
+        "active": false
+      },
+      "E/08": {
+        "address": "0x49",
+        "channel": "P3",
+        "h_0_min": 0,
+        "h_100_max": 0,
+        "activeToId": 8,
+        "active": false
+      },
+      "E/09": {
+        "address": "0x4a",
+        "channel": "P0",
+        "h_0_min": 19707.133333333335,
+        "h_100_max": 10668.4,
+        "activeToId": 9,
+        "active": false
+      }
+    }
+  }
 }

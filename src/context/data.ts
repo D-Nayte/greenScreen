@@ -1,55 +1,7 @@
-'use client';
+"use client";
 
-import { create } from 'zustand';
-
-export type Data = {
-  generall: {
-    temperature: {
-      min: number;
-      max: number;
-      active: boolean;
-      current: number;
-      sensor: number;
-    };
-    humidityAir: {
-      min: number;
-      max: number;
-      active: boolean;
-      current: number;
-      sensor: number | null;
-    };
-    light: {
-      active: boolean;
-      current: number;
-      sensor: number;
-    };
-    pressure: {
-      min: number;
-      max: number;
-      active: boolean;
-      current: number;
-      sensor: number;
-    };
-    fan: {
-      active: boolean;
-      current: number;
-      sensor: number;
-    };
-  };
-  plantConfig: {
-    id: number;
-    soilName: string;
-    name: string;
-    humiditySoil: string;
-    waterOn: boolean;
-    usehumiditySoil: boolean;
-    soilSensor: number | null;
-    usePump: boolean;
-    pumpSensor: number | null;
-    startPump: number;
-    stopPump: number;
-  }[];
-};
+import { create } from "zustand";
+import { Data } from "../../types/sensor";
 
 type SocketState = {
   data: Data | null;
