@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useData } from "@/context/data";
-import { pinList } from "../../sensor/gipo";
+import { pinList } from "../../utils/constant";
 
 type Props = {
   value: string | null | undefined;

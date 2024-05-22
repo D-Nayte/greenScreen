@@ -1,20 +1,9 @@
 import { exec } from "child_process";
 import { Data, PinKey } from "../types/sensor";
+import { pinList } from "../utils/constant";
 
 // Definiere den Pin (BCM 4 entspricht physischem Pin 7)
 // const pin = 6;
-
-// GIPO MAP IMPORTAND!
-export const pinList = {
-  "A/1": 14,
-  "A/2": 15,
-  "A/3": 4,
-  "A/4": 23,
-  "A/5": 24,
-  "A/6": 6,
-  "A/7": 7,
-  "A/8": 26,
-};
 
 exec("pgrep pigpiod", (error, stdout, stderr) => {
   if (stdout) {

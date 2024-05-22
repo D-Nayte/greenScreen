@@ -4,13 +4,13 @@
       "min": 18,
       "max": 19,
       "active": true,
-      "current": 27.88
+      "current": 27.09
     },
     "humidityAir": {
       "min": 41,
       "max": 74,
       "active": true,
-      "current": 42.9
+      "current": 44.91
     },
     "light": {
       "active": true,
@@ -25,7 +25,7 @@
       "min": 1000,
       "max": 1010,
       "active": true,
-      "current": 988.07
+      "current": 988.62
     }
   },
   "plantConfig": [
@@ -33,8 +33,8 @@
       "id": 1,
       "soilName": "Composit light Mix",
       "name": "Paprika",
-      "humiditySoil": "104.9",
-      "waterOn": false,
+      "humiditySoil": "4.9",
+      "waterOn": true,
       "usehumiditySoil": true,
       "soilSensor": "E/01",
       "usePump": true,
