@@ -8,6 +8,7 @@ import { getConfigData, writeData } from "./utils/readConfig";
 import { SECOND_IN_MS } from "./utils/constant";
 import { Data } from "./types/sensor";
 import { handleAdcMoistureChange } from "./sensor/adcSensor";
+import { handleRelaiChanges } from "./sensor/gipo";
 
 config();
 
@@ -46,6 +47,7 @@ const readSensors = async () => {
 
   await handleEnvChange(configData, shouldWriteData);
   await handleAdcMoistureChange(configData, shouldWriteData);
+  handleRelaiChanges(configData);
   // console.log("configData :>> ", configData);
 
   return shouldWriteData.change ? writeData(configData) : configData;

@@ -1,4 +1,7 @@
 # Chnage GPIO on boot
+gpio=X: Bezieht sich auf den GPIO-Pin mit der Nummer X.
+op: Steht für "Output", was bedeutet, dass der GPIO-Pin als Ausgang konfiguriert ist.
+dl: Steht für "Drive Low", was bedeutet, dass der GPIO-Pin im Ausgangszustand auf LOW (0V) gesetzt ist.
 
 ```bash
 sudo nano /boot/firmware/config.txt

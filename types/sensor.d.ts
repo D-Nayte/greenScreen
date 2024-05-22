@@ -8,6 +8,16 @@ export declare type EnvSensorData = {
 
 export type SoilLabelList = keyof Data["sensors"]["adcSensors"];
 
+export type PinKey =
+  | "A/1"
+  | "A/2"
+  | "A/3"
+  | "A/4"
+  | "A/5"
+  | "A/6"
+  | "A/7"
+  | "A/8";
+
 export type Data = {
   generall: {
     temperature: {
@@ -15,31 +25,31 @@ export type Data = {
       max: number;
       active: boolean;
       current: number;
-      sensor: number;
+      sensor?: null;
     };
     humidityAir: {
       min: number;
       max: number;
       active: boolean;
       current: number;
-      sensor: number | null;
+      sensor?: null;
     };
     light: {
       active: boolean;
       current: number;
-      sensor: number;
+      sensor: "A/19";
     };
     pressure: {
       min: number;
       max: number;
       active: boolean;
       current: number;
-      sensor: number;
+      sensor?: null;
     };
     fan: {
       active: boolean;
       current: number;
-      sensor: number;
+      sensor?: PinKey | null;
     };
   };
   plantConfig: {
@@ -51,7 +61,7 @@ export type Data = {
     usehumiditySoil: boolean;
     soilSensor: SoilLabelList | null;
     usePump: boolean;
-    pumpSensor: number | null;
+    pumpSensor: PinKey | null;
     startPump: number;
     stopPump: number;
   }[];

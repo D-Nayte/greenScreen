@@ -1,37 +1,27 @@
 import { exec } from "child_process";
+import { Data, PinKey } from "../types/sensor";
 
 // Definiere den Pin (BCM 4 entspricht physischem Pin 7)
-const pin = 4;
+// const pin = 6;
 
-const pinList = {
-  GPIO4: 4,
-  GPIO17: 17,
-  GPIO27: 27,
-  GPIO22: 22,
-  GPIO5: 5,
-  GPIO6: 6,
-  GPIO13: 13,
-  GPIO19: 19,
-
-  GPIO14: 14,
-  GPIO15: 15,
-  GPIO18: 18,
-  GPIO23: 23,
-  GPIO24: 24,
-  GPIO25: 25,
-  GPIO12: 12,
-  GPIO16: 16,
-  GPIO20: 20,
-  GPIO21: 21,
+// GIPO MAP IMPORTAND!
+export const pinList = {
+  "A/1": 14,
+  "A/2": 15,
+  "A/3": 4,
+  "A/4": 23,
+  "A/5": 24,
+  "A/6": 6,
+  "A/7": 7,
+  "A/8": 26,
 };
-
-type PinKey = keyof typeof pinList;
 
 exec("pgrep pigpiod", (error, stdout, stderr) => {
   if (stdout) {
     console.log("pigpiod läuft bereits");
   } else {
     console.log("pigpiod läuft nicht");
+
     exec("sudo pigpiod", (error, stdout, stderr) => {
       if (error) {
         console.error(`Fehler beim Starten von pigpiod: ${stderr}`);
@@ -41,6 +31,25 @@ exec("pgrep pigpiod", (error, stdout, stderr) => {
     });
   }
 });
+
+export const checkGpioStatus = (pinKey: PinKey) => {
+  const pin = pinList[pinKey];
+  const command = `pigs r ${pin}`;
+  console.log("command :>> ", command);
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        // console.error(`Fehler beim Abfragen des GPIO-Status: ${stderr}`);
+        resolve(null);
+      } else {
+        // 0 bedeutet LOW, 1 bedeutet HIGH
+        const status = parseInt(stdout.trim(), 10) === 1;
+        console.log(null, status);
+        resolve(status);
+      }
+    });
+  });
+};
 
 // Funktion zum Ausführen von Shell-Befehlen
 const runCommand = (command: string, callback: (stdout: string) => void) => {
@@ -53,33 +62,63 @@ const runCommand = (command: string, callback: (stdout: string) => void) => {
   });
 };
 
-export const enableGpio = (pinKey: PinKey) => {
+export const enableGpio = async (pinKey: PinKey) => {
+  const isEnabled = await checkGpioStatus(pinKey);
+  if (isEnabled) return console.log(`${pinKey} ist bereits eingeschaltet`);
+  if (isEnabled === null) return console.log(`${pinKey} nicht angeschlossen!`);
+
   const pin = pinList[pinKey];
   runCommand(`pigs w ${pin} 1`, () => {
     console.log(`${pinKey} wurde eingeschaltet`);
   });
 };
 
-export const disableGpio = (pinKey: PinKey) => {
+export const disableGpio = async (pinKey: PinKey) => {
   const pin = pinList[pinKey];
+  const isEnabled = await checkGpioStatus(pinKey);
+  if (isEnabled === false)
+    return console.log(`${pinKey} ist bereits ausgeschaltet`);
+  if (isEnabled === null) return console.log(`${pin} nicht angeschlossen!`);
+
   runCommand(`pigs w ${pin} 0`, () => {
     console.log(`${pinKey} wurde ausgeschaltet`);
   });
 };
 
-// Schalte den Pin ein
-runCommand(`pigs w ${pin} 1`, () => {
-  console.log("Pin wurde eingeschaltet");
+// // Schalte den Pin ein
+// runCommand(`pigs w ${pin} 1`, () => {
+//   console.log("Pin wurde eingeschaltet");
 
-  // Schalte den Pin nach 3 Sekunden wieder aus
-  setTimeout(() => {
-    runCommand(`pigs w ${pin} 0`, () => {
-      console.log("Pin wurde ausgeschaltet");
+//   // Schalte den Pin nach 3 Sekunden wieder aus
+//   setTimeout(() => {
+//     runCommand(`pigs w ${pin} 0`, () => {
+//       console.log("Pin wurde ausgeschaltet");
 
-      // Cleanup (falls erforderlich)
-      runCommand(`pigs w ${pin} 0`, () => {
-        console.log("GPIO Cleanup durchgeführt");
-      });
-    });
-  }, 3000);
-});
+//       // Cleanup (falls erforderlich)
+//       runCommand(`pigs w ${pin} 0`, () => {
+//         console.log("GPIO Cleanup durchgeführt");
+//       });
+//     });
+//   }, 3000);
+// });
+
+export const handleRelaiChanges = (configData: Data) => {
+  //  activate fan
+  const fan = configData.generall.fan;
+  fan.current && fan.active
+    ? enableGpio(fan.sensor!)
+    : disableGpio(fan.sensor!);
+
+  //  activate plant pumps
+  const plants = configData.plantConfig.filter(
+    (plant) => plant.usePump && plant.pumpSensor
+  );
+
+  plants.forEach((plant) => {
+    // enableGpio(plant.pumpSensor as PinKey);
+    const sensorLabel = plant.pumpSensor!;
+    console.log("sensorLabel :>> ", sensorLabel);
+    // const senroKey = pinList[sensorLabel]
+    plant.waterOn ? enableGpio(sensorLabel) : disableGpio(sensorLabel);
+  });
+};

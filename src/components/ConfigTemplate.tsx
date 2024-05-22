@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import SelectSensor from "./SelectSensor";
 import { useData } from "@/context/data";
-import { Data } from "../../types/sensor";
+import { Data, PinKey } from "../../types/sensor";
 
 type GenerellConfigKeys = "temperature" | "humidityAir" | "light" | "fan";
 type TempHumidity = "temperature" | "humidityAir";
@@ -18,6 +18,7 @@ type ConfigTemplateProps<T extends GenerellConfigKeys> = T extends TempHumidity
       maxValue: number;
       min: number;
       max: number;
+      hasSensor?: undefined;
     }
   : {
       unit?: undefined;
@@ -26,6 +27,7 @@ type ConfigTemplateProps<T extends GenerellConfigKeys> = T extends TempHumidity
       maxValue?: undefined;
       min?: undefined;
       max?: undefined;
+      hasSensor?: boolean;
     };
 
 const ConfigTemplate = <T extends GenerellConfigKeys>({
@@ -35,6 +37,7 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
   config,
   min,
   max,
+  hasSensor = false,
 }: ConfigTemplateProps<T>) => {
   const { setData } = useSocket();
   const { data } = useData();
@@ -68,14 +71,14 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
     dataCopy.generall[field].active = !dataCopy.generall[field].active;
 
     if (!dataCopy.generall[field].active) {
-      dataCopy.generall[field].sensor = null;
+      if (field === "fan") dataCopy.generall["fan"].sensor = null;
     }
 
     setData(dataCopy);
   };
 
-  const handleSensorChange = (sensor: number, field: GenerellConfigKeys) => {
-    if (!dataCopy.generall) return;
+  const handleSensorChange = (sensor: PinKey, field: "fan") => {
+    if (!dataCopy.generall && !hasSensor) return;
 
     dataCopy.generall[field].sensor = sensor;
 
@@ -136,16 +139,17 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
             onCheckedChange={(e) => data.generall && activateDisable(config)}
           />
         </div>
-
-        <div className="flex items-center gap-1 ">
-          <SelectSensor
-            value={data.generall[config].sensor?.toString()}
-            onSenorChange={(value) =>
-              handleSensorChange(parseInt(value), config)
-            }
-            disabled={!data.generall[config].active}
-          />
-        </div>
+        {hasSensor && config === "fan" && data?.generall && (
+          <div className="flex items-center gap-1 ">
+            <SelectSensor
+              value={data?.generall["fan"]!.sensor?.toString() || ""}
+              onSenorChange={(value) =>
+                handleSensorChange(value as PinKey, "fan")
+              }
+              disabled={!data.generall[config].active}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

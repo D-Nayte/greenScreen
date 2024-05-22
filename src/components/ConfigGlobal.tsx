@@ -54,8 +54,7 @@ const ConfigGlobal = () => {
         <Accordion type="single" collapsible>
           <AccordionItem value="item-2">
             <AccordionTrigger className="hover:no-underline">
-              {" "}
-              Humidity Air{" "}
+              Humidity Air
             </AccordionTrigger>
             <AccordionContent>
               <ConfigTemplate
@@ -73,8 +72,7 @@ const ConfigGlobal = () => {
         <Accordion type="single" collapsible>
           <AccordionItem value="item-3">
             <AccordionTrigger className="hover:no-underline">
-              {" "}
-              Light{" "}
+              Light
             </AccordionTrigger>
             <AccordionContent>
               <ConfigTemplate config="light" />
@@ -85,11 +83,10 @@ const ConfigGlobal = () => {
         <Accordion type="single" collapsible>
           <AccordionItem value="item-4">
             <AccordionTrigger className="hover:no-underline">
-              {" "}
-              Fan{" "}
+              Fan
             </AccordionTrigger>
             <AccordionContent>
-              <ConfigTemplate config="fan" />
+              <ConfigTemplate config="fan" hasSensor={true} />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -97,8 +94,7 @@ const ConfigGlobal = () => {
         <Accordion type="single" collapsible>
           <AccordionItem value="item-5">
             <AccordionTrigger className="hover:no-underline">
-              {" "}
-              Plants{" "}
+              Plants
             </AccordionTrigger>
             <AccordionContent>
               <Tabs defaultValue="plants" className="w-full">

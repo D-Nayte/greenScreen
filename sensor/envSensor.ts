@@ -58,22 +58,21 @@ export const handleEnvChange = async (
   const tempInRange =
     envData.temperature >= generall.temperature.min &&
     envData.temperature <= generall.temperature.max;
-  const fanisOff = !generall.fan.active;
+  const fanisOff = !generall.fan.current;
 
-  if (!tempInRange) {
+  if (!tempInRange && generall.fan.active) {
     const fanShouldBeActive = tempAboveMax && fanisOff;
     const fanShouldBeInactive = tempBelowMin && !fanisOff;
 
     if (fanShouldBeActive || fanShouldBeInactive) {
       shouldWriteData.change = true;
-      generall.fan.active = fanShouldBeActive;
+      generall.fan.current = fanShouldBeActive ? 1 : 0;
     }
   }
 };
 
 try {
   await bme280.init();
- 
 } catch (error) {
   console.error("Error Reading Enviroment Sensor", error);
 }

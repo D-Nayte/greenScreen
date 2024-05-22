@@ -4,9 +4,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { useData } from '@/context/data';
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { useData } from "@/context/data";
+import { pinList } from "../../sensor/gipo";
 
 type Props = {
   value: string | null | undefined;
@@ -15,21 +16,31 @@ type Props = {
   withLabel?: boolean;
 };
 
-const SelectSensor = ({ value, onSenorChange, disabled, withLabel = true }: Props) => {
+const SelectSensor = ({
+  value,
+  onSenorChange,
+  disabled,
+  withLabel = true,
+}: Props) => {
   const { data } = useData();
-  const generallSensors = Object.values(data?.generall || {}).map(
-    (item) => item.active && item?.sensor
-  );
+  const generallSensors = Object.values(data?.generall || {})
+    .map((item) => item.active && item?.sensor && item.sensor)
+    .filter((item) => item);
   const plantsSensor = data?.plantConfig
-    ? data.plantConfig.map((item) => item.usehumiditySoil && item.soilSensor)
+    ? data.plantConfig
+        .map((item) => item.usehumiditySoil && item.soilSensor)
+        .filter((item) => item)
     : [];
-  const usedSensors = [...generallSensors, ...plantsSensor].filter((item) => item !== undefined);
-  const sensorTotal = 18;
+  const usedSensors = [...generallSensors, ...plantsSensor].filter(
+    (item) => item
+  ) as string[];
+  const sensors = Object.keys(pinList);
+  const sensorTotal = sensors.length;
 
   return (
     <>
       {withLabel && <Label htmlFor="sensor">Sensor</Label>}
-      <Select onValueChange={onSenorChange} value={value || ''}>
+      <Select onValueChange={onSenorChange} value={value || ""}>
         <SelectTrigger id="sensor" className="w-[150px]" disabled={disabled}>
           <SelectValue placeholder="Select" />
         </SelectTrigger>
@@ -37,14 +48,12 @@ const SelectSensor = ({ value, onSenorChange, disabled, withLabel = true }: Prop
           onCloseAutoFocus={(e) => {
             e.preventDefault();
             e.stopPropagation();
-          }}
-        >
-          {Array.from({ length: sensorTotal }).map((_, index) => (
+          }}>
+          {sensors.map((label, index) => (
             <SelectItem
               key={index}
-              value={`${index + 1}`}
-              disabled={usedSensors.includes(index + 1)}
-            >
+              value={label}
+              disabled={value ? usedSensors.includes(value) : false}>
               {index + 1}
             </SelectItem>
           ))}
