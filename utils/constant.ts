@@ -8,11 +8,10 @@ export const SECOND_IN_MS = [
 
 export const pinList = {
   "A/1": 14,
-  "A/2": 15,
+  "A/2": 12,
   "A/3": 4,
   "A/4": 23,
   "A/5": 24,
   "A/6": 6,
   "A/7": 7,
-  "A/8": 26,
 };

@@ -1,22 +1,35 @@
-import { exec } from 'child_process';
-import { Data, PinKey } from '../types/sensor';
-import { pinList } from '../utils/constant';
+import { exec } from "child_process";
+import { Data, PinKey } from "../types/sensor";
+import { pinList } from "../utils/constant";
 
-// Definiere den Pin (BCM 4 entspricht physischem Pin 7)
-// const pin = 6;
+export const enableRelaiPower = async () => {
+  const pin = 26;
 
-exec('pgrep pigpiod', (error, stdout, stderr) => {
+  runCommand(`pigs w ${pin} 0`, () => {
+    console.log(`GPIO wurde ausgeschaltet, Relai if off `);
+  });
+};
+
+export const disableRelaiPower = async () => {
+  const pin = 26;
+
+  runCommand(`pigs w ${pin} 1`, () => {
+    console.log(`GPIO wurde einsgeschaltet, Relai if on`);
+  });
+};
+
+exec("pgrep pigpiod", (error, stdout, stderr) => {
   if (stdout) {
-    console.log('pigpiod läuft bereits');
+    console.log("pigpiod läuft bereits");
   } else {
-    console.log('pigpiod läuft nicht');
+    console.log("pigpiod läuft nicht");
 
-    exec('sudo pigpiod', (error, stdout, stderr) => {
+    exec("sudo pigpiod", (error, stdout, stderr) => {
       if (error) {
         console.error(`Fehler beim Starten von pigpiod: ${stderr}`);
         return;
       }
-      console.log('pigpiod gestartet');
+      console.log("pigpiod gestartet");
     });
   }
 });
@@ -64,7 +77,8 @@ export const enableGpio = async (pinKey: PinKey) => {
 export const disableGpio = async (pinKey: PinKey) => {
   const pin = pinList[pinKey];
   const isEnabled = await checkGpioStatus(pinKey);
-  if (isEnabled === false) return console.log(`${pinKey} ist bereits ausgeschaltet`);
+  if (isEnabled === false)
+    return console.log(`${pinKey} ist bereits ausgeschaltet`);
   if (isEnabled === null) return console.log(`${pin} nicht angeschlossen!`);
 
   runCommand(`pigs w ${pin} 0`, () => {
@@ -72,30 +86,17 @@ export const disableGpio = async (pinKey: PinKey) => {
   });
 };
 
-// // Schalte den Pin ein
-// runCommand(`pigs w ${pin} 1`, () => {
-//   console.log("Pin wurde eingeschaltet");
-
-//   // Schalte den Pin nach 3 Sekunden wieder aus
-//   setTimeout(() => {
-//     runCommand(`pigs w ${pin} 0`, () => {
-//       console.log("Pin wurde ausgeschaltet");
-
-//       // Cleanup (falls erforderlich)
-//       runCommand(`pigs w ${pin} 0`, () => {
-//         console.log("GPIO Cleanup durchgeführt");
-//       });
-//     });
-//   }, 3000);
-// });
-
 export const handleRelaiChanges = (configData: Data) => {
   //  activate fan
   const fan = configData.generall.fan;
-  fan.current && fan.active ? enableGpio(fan.sensor!) : disableGpio(fan.sensor!);
+  fan.current && fan.active
+    ? enableGpio(fan.sensor!)
+    : disableGpio(fan.sensor!);
 
   //  activate plant pumps
-  const plants = configData.plantConfig.filter((plant) => plant.usePump && plant.pumpSensor);
+  const plants = configData.plantConfig.filter(
+    (plant) => plant.usePump && plant.pumpSensor
+  );
 
   plants.forEach((plant) => {
     // enableGpio(plant.pumpSensor as PinKey);

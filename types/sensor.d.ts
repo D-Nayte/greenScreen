@@ -8,15 +8,7 @@ export declare type EnvSensorData = {
 
 export type SoilLabelList = keyof Data["sensors"]["adcSensors"];
 
-export type PinKey =
-  | "A/1"
-  | "A/2"
-  | "A/3"
-  | "A/4"
-  | "A/5"
-  | "A/6"
-  | "A/7"
-  | "A/8";
+export type PinKey = "A/1" | "A/2" | "A/3" | "A/4" | "A/5" | "A/6" | "A/7";
 
 export type Data = {
   generall: {

@@ -1,16 +1,17 @@
-import express from 'express';
-import next from 'next';
-import http from 'http';
-import { Server } from 'socket.io';
-import { config } from 'dotenv';
-import { handleEnvChange } from './sensor/envSensor';
-import { getConfigData, writeData } from './utils/readConfig';
-import { SECOND_IN_MS } from './utils/constant';
-import { Data } from './types/sensor';
-import { handleAdcMoistureChange } from './sensor/adcSensor';
-import { handleRelaiChanges } from './sensor/gipo';
+import express from "express";
+import next from "next";
+import http from "http";
+import { Server } from "socket.io";
+import { config } from "dotenv";
+import { handleEnvChange } from "./sensor/envSensor";
+import { getConfigData, writeData } from "./utils/readConfig";
+import { SECOND_IN_MS } from "./utils/constant";
+import { Data } from "./types/sensor";
+import { handleAdcMoistureChange } from "./sensor/adcSensor";
+import { enableRelaiPower, handleRelaiChanges } from "./sensor/gipo";
 
 config();
+enableRelaiPower();
 
 export interface ServerToClientEvents {
   noArg: () => void;
@@ -36,7 +37,7 @@ export interface SocketData {
 }
 
 const args = process.argv;
-const dev = args[2] !== '--prod';
+const dev = args[2] !== "--prod";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 const PORT = process.env.WEBSOCKET_PORT || 3000;
@@ -46,9 +47,8 @@ const readSensors = async () => {
   const configData = getConfigData();
 
   await handleEnvChange(configData, shouldWriteData);
-  // await handleAdcMoistureChange(configData, shouldWriteData);
+  await handleAdcMoistureChange(configData, shouldWriteData);
   handleRelaiChanges(configData);
-  // console.log("configData :>> ", configData);
 
   return shouldWriteData.change ? writeData(configData) : configData;
 };
@@ -56,37 +56,39 @@ const readSensors = async () => {
 app.prepare().then(async () => {
   const server = express();
   const httpServer = http.createServer(server);
-  const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(
-    httpServer,
-    {
-      cors: {
-        origin: '*',
-      },
-    }
-  );
+  const io = new Server<
+    ClientToServerEvents,
+    ServerToClientEvents,
+    InterServerEvents,
+    SocketData
+  >(httpServer, {
+    cors: {
+      origin: "*",
+    },
+  });
 
-  io.on('connection', (socket) => {
-    console.info('Client connected');
+  io.on("connection", (socket) => {
+    console.info("Client connected");
 
-    socket.on('setData', (data: Data) => {
+    socket.on("setData", (data: Data) => {
       const newData = writeData(data);
 
-      io.emit('sendConfig', newData);
+      io.emit("sendConfig", newData);
     });
 
-    socket.on('getData', async () => {
+    socket.on("getData", async () => {
       const data = getConfigData();
-      io.emit('sendData', data);
+      io.emit("sendData", data);
     });
   });
 
   setInterval(async () => {
     const data = await readSensors();
 
-    io.emit('sendData', data);
+    io.emit("sendData", data);
   }, SECOND_IN_MS[3]);
 
-  server.all('*', (req, res) => {
+  server.all("*", (req, res) => {
     return handle(req, res);
   });
 
