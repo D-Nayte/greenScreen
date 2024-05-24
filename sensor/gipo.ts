@@ -2,22 +2,6 @@ import { exec } from "child_process";
 import { Data, PinKey } from "../types/sensor";
 import { pinList } from "../utils/constant";
 
-export const enableRelaiPower = async () => {
-  const pin = 26;
-
-  runCommand(`pigs w ${pin} 0`, () => {
-    console.log(`GPIO wurde ausgeschaltet, Relai if off `);
-  });
-};
-
-export const disableRelaiPower = async () => {
-  const pin = 26;
-
-  runCommand(`pigs w ${pin} 1`, () => {
-    console.log(`GPIO wurde einsgeschaltet, Relai if on`);
-  });
-};
-
 exec("pgrep pigpiod", (error, stdout, stderr) => {
   if (stdout) {
     console.log("pigpiod läuft bereits");
@@ -33,6 +17,22 @@ exec("pgrep pigpiod", (error, stdout, stderr) => {
     });
   }
 });
+
+export const enableRelaiPower = async () => {
+  const pin = 26;
+
+  runCommand(`pigs w ${pin} 0`, () => {
+    console.log(`GPIO wurde ausgeschaltet, Relai ist on `);
+  });
+};
+
+export const disableRelaiPower = async () => {
+  const pin = 26;
+
+  runCommand(`pigs w ${pin} 1`, () => {
+    console.log(`GPIO wurde einsgeschaltet, Relai ist off`);
+  });
+};
 
 export const checkGpioStatus = (pinKey: PinKey) => {
   const pin = pinList[pinKey];
