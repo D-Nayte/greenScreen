@@ -3,14 +3,16 @@ import next from "next";
 import http from "http";
 import { Server } from "socket.io";
 import { config } from "dotenv";
-import { handleEnvChange } from "./sensor/envSensor";
+import { handleEnvChange, initEnvSensor } from "./sensor/envSensor";
 import { getConfigData, writeData } from "./utils/readConfig";
 import { SECOND_IN_MS } from "./utils/constant";
 import { Data } from "./types/sensor";
 import { handleAdcMoistureChange } from "./sensor/adcSensor";
 import { enableRelaiPower, handleRelaiChanges } from "./sensor/gipo";
+import { handleLightSensor } from "./sensor/lightSensor";
 
 config();
+await initEnvSensor();
 enableRelaiPower();
 
 export interface ServerToClientEvents {
@@ -46,8 +48,24 @@ const readSensors = async () => {
   const shouldWriteData = { change: false };
   const configData = getConfigData();
 
-  await handleEnvChange(configData, shouldWriteData);
-  await handleAdcMoistureChange(configData, shouldWriteData);
+  try {
+    await handleEnvChange(configData, shouldWriteData);
+  } catch (error) {
+    console.error(error);
+  }
+
+  try {
+    await handleAdcMoistureChange(configData, shouldWriteData);
+  } catch (error) {
+    console.error(error);
+  }
+
+  try {
+    handleLightSensor(configData);
+  } catch (error) {
+    console.error(error);
+  }
+
   handleRelaiChanges(configData);
 
   return shouldWriteData.change ? writeData(configData) : configData;

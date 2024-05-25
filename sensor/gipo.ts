@@ -4,16 +4,16 @@ import { pinList } from "../utils/constant";
 
 exec("pgrep pigpiod", (error, stdout, stderr) => {
   if (stdout) {
-    console.log("pigpiod läuft bereits");
+    console.info("pigpiod läuft bereits");
   } else {
-    console.log("pigpiod läuft nicht");
+    console.info("pigpiod läuft nicht");
 
     exec("sudo pigpiod", (error, stdout, stderr) => {
       if (error) {
         console.error(`Fehler beim Starten von pigpiod: ${stderr}`);
         return;
       }
-      console.log("pigpiod gestartet");
+      console.info("pigpiod gestartet");
     });
   }
 });
@@ -22,7 +22,7 @@ export const enableRelaiPower = async () => {
   const pin = 26;
 
   runCommand(`pigs w ${pin} 0`, () => {
-    console.log(`GPIO wurde ausgeschaltet, Relai ist on `);
+    console.info(`GPIO wurde ausgeschaltet, Relai ist on `);
   });
 };
 
@@ -30,7 +30,7 @@ export const disableRelaiPower = async () => {
   const pin = 26;
 
   runCommand(`pigs w ${pin} 1`, () => {
-    console.log(`GPIO wurde einsgeschaltet, Relai ist off`);
+    console.info(`GPIO wurde einsgeschaltet, Relai ist off`);
   });
 };
 
@@ -45,7 +45,7 @@ export const checkGpioStatus = (pinKey: PinKey) => {
       } else {
         // 0 bedeutet LOW, 1 bedeutet HIGH
         const status = parseInt(stdout.trim(), 10) === 1;
-        console.log(null, status);
+
         resolve(status);
       }
     });

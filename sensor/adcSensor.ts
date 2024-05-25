@@ -11,6 +11,7 @@ type ReadDat = { sensor: SoilLabelList; humidity: number }[];
 
 const folderPath = "sensor/adc.py";
 const py = "pythonVirtual/bin/python3";
+const isLinux = process.platform === "linux";
 
 // const readProcess = spawn(py, [folderPath]);
 
@@ -38,6 +39,8 @@ const py = "pythonVirtual/bin/python3";
 // } , 1000);
 
 export const readAdcData = (): Promise<ReadDat> => {
+  if (!isLinux) return Promise.resolve([{ sensor: "E/01", humidity: 50 }]);
+
   const readProcess = spawn(py, [folderPath]);
 
   return new Promise((resolve, reject) => {
