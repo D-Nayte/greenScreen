@@ -38,6 +38,8 @@ export interface SocketData {
     age: number
 }
 
+export const serverIntervall = SECOND_IN_MS[3]
+
 const args = process.argv
 const dev = args[2] !== '--prod'
 const app = next({ dev })
@@ -103,7 +105,7 @@ app.prepare().then(async () => {
     //activate sensor rotation
     setInterval(async () => {
         await readSensors()
-    }, SECOND_IN_MS[3])
+    }, serverIntervall)
 
     server.all('*', (req, res) => {
         return handle(req, res)

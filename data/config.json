@@ -33,14 +33,17 @@
       "id": 1,
       "soilName": "Composit light Mix",
       "name": "Paprika",
-      "humiditySoil": "50",
+      "humiditySoil": "20",
       "waterOn": true,
       "usehumiditySoil": true,
       "soilSensor": "E/01",
       "usePump": true,
+      "throughput": 800,
+      "pourAmount": 1,
       "pumpSensor": "A/1",
-      "startPump": 0,
-      "stopPump": 67
+      "startPump": 25,
+      "stopPump": 67,
+      "timeLeftPouring": 4500
     },
     {
       "id": 2,
@@ -51,9 +54,12 @@
       "usehumiditySoil": true,
       "soilSensor": "E/02",
       "usePump": false,
+      "throughput": 5,
+      "pourAmount": 5,
       "pumpSensor": "A/2",
       "startPump": 10,
-      "stopPump": 2
+      "stopPump": 2,
+      "timeLeftPouring": 0
     },
     {
       "id": 3,
@@ -64,9 +70,12 @@
       "usehumiditySoil": true,
       "soilSensor": null,
       "usePump": false,
+      "throughput": 5,
+      "pourAmount": 5,
       "pumpSensor": "A/3",
       "startPump": 1,
-      "stopPump": 2
+      "stopPump": 2,
+      "timeLeftPouring": 0
     },
     {
       "id": 4,
@@ -78,8 +87,11 @@
       "pumpSensor": "A/4",
       "usehumiditySoil": true,
       "usePump": true,
+      "throughput": 5,
+      "pourAmount": 5,
       "startPump": 0,
-      "stopPump": 1
+      "stopPump": 1,
+      "timeLeftPouring": 0
     }
   ],
   "sensors": {
