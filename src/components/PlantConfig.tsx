@@ -1,5 +1,5 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,58 +7,56 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { TiDelete } from "react-icons/ti";
-import { Switch } from "./ui/switch";
-import SelectSensor from "./SelectSensor";
-import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Slider } from "./ui/slider";
-import { useSocket } from "@/context/sockets";
-import { useData } from "@/context/data";
-import { FcCheckmark } from "react-icons/fc";
-import { Data } from "../../types/sensor";
+} from '@/components/ui/dropdown-menu';
+import { TiDelete } from 'react-icons/ti';
+import { Switch } from './ui/switch';
+import SelectSensor from './SelectSensor';
+import { memo, useEffect, useMemo, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Slider } from './ui/slider';
+import { useSocket } from '@/context/sockets';
+import { useData } from '@/context/data';
+import { FcCheckmark } from 'react-icons/fc';
+import { Data, PinKey, Plant, SoilLabelList } from '../../types/sensor';
+import { useShallow } from 'zustand/react/shallow';
 
 type Props = {
-  plant: Data["plantConfig"][0];
-  id: Data["plantConfig"][0]["id"];
+  plant: Data['plantConfig'][0];
+  id: Data['plantConfig'][0]['id'];
   noDelete?: boolean;
 };
 
 const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
-  const [plantCopy, setplantCopy] = useState(JSON.parse(JSON.stringify(plant)));
+  const [plantCopy, setplantCopy] = useState<Plant>(JSON.parse(JSON.stringify(plant)));
   const [hasChanged, sethasChanged] = useState(false);
   const { setData } = useSocket();
-  const { data } = useData();
+  const { data } = useData(
+    useShallow((state) => ({ data: state.data })),
+    () => false
+  );
 
   const handleSensorChange = (
-    value: number,
-    sensor: "soilSensor" | "pumpSensor"
+    value: SoilLabelList | PinKey | null | undefined,
+    sensor: 'soilSensor' | 'pumpSensor'
   ) => {
-    plantCopy[sensor] = value;
+    plantCopy[sensor] = value as any;
     setplantCopy(() => ({ ...plantCopy }));
   };
 
-  const handActivateDisable = (
-    val: boolean,
-    sensor: "usehumiditySoil" | "usePump"
-  ) => {
+  const handActivateDisable = (val: boolean, sensor: 'usehumiditySoil' | 'usePump') => {
     plantCopy[sensor] = val;
 
     setplantCopy(() => ({ ...plantCopy }));
   };
 
-  const handlePumpStartStopChange = (
-    value: number,
-    startStop: "startPump" | "stopPump"
-  ) => {
+  const handlePumpStartStopChange = (value: number, startStop: 'startPump' | 'stopPump') => {
     let newValue = value;
 
-    if (startStop === "stopPump" && value <= plantCopy.startPump) {
+    if (startStop === 'stopPump' && value <= plantCopy.startPump) {
       plantCopy.startPump = value - 1;
     }
 
-    if (startStop === "startPump" && value >= plantCopy.stopPump) {
+    if (startStop === 'startPump' && value >= plantCopy.stopPump) {
       plantCopy.stopPump = value + 1;
     }
 
@@ -69,9 +67,7 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
   const handleSave = (id: number) => {
     if (!data) return;
 
-    const oldPlantIndex = data.plantConfig.findIndex(
-      (plant) => plant.id === id
-    );
+    const oldPlantIndex = data.plantConfig.findIndex((plant) => plant.id === id);
 
     if (oldPlantIndex !== -1) {
       data.plantConfig[oldPlantIndex] = plantCopy;
@@ -88,7 +84,7 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
     sethasChanged(false);
   };
 
-  const handleInpitChange = (value: string, key: "soilName" | "name") => {
+  const handleInpitChange = (value: string, key: 'soilName' | 'name') => {
     plantCopy[key] = value;
     setplantCopy(() => ({ ...plantCopy }));
   };
@@ -124,7 +120,7 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
           type="text"
           placeholder="Plant"
           defaultValue={plantCopy.name}
-          onChange={(e) => handleInpitChange(e.target.value, "name")}
+          onChange={(e) => handleInpitChange(e.target.value, 'name')}
         />
       </div>
 
@@ -134,7 +130,7 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
           type="text"
           placeholder="Soil"
           defaultValue={plantCopy.soilName}
-          onChange={(e) => handleInpitChange(e.target.value, "soilName")}
+          onChange={(e) => handleInpitChange(e.target.value, 'soilName')}
         />
       </div>
 
@@ -146,18 +142,15 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
             id="soil-sensor"
             defaultChecked={plantCopy.usehumiditySoil}
             checked={plantCopy.usehumiditySoil}
-            onCheckedChange={(val) =>
-              handActivateDisable(val, "usehumiditySoil")
-            }
+            onCheckedChange={(val) => handActivateDisable(val, 'usehumiditySoil')}
           />
         </div>
         <SelectSensor
-          value={plantCopy.soilSensor?.toString()}
-          onSenorChange={(value) =>
-            handleSensorChange(parseInt(value), "soilSensor")
-          }
+          value={plantCopy.soilSensor}
+          onSenorChange={(value) => handleSensorChange(value, 'soilSensor')}
           disabled={!plantCopy.usehumiditySoil}
           withLabel={false}
+          unit="soil"
         />
       </div>
       <div className="flex items-center gap-4 w-full justify-between">
@@ -166,31 +159,28 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
 
           <Switch
             id="pump-sensor"
-            defaultChecked={
-              plantCopy.usehumiditySoil ? plantCopy.usePump : false
-            }
+            defaultChecked={plantCopy.usehumiditySoil ? plantCopy.usePump : false}
             checked={plantCopy.usehumiditySoil ? plantCopy.usePump : false}
-            onCheckedChange={(val) => handActivateDisable(val, "usePump")}
+            onCheckedChange={(val) => handActivateDisable(val, 'usePump')}
             disabled={!plantCopy.usehumiditySoil}
           />
         </div>
 
         <SelectSensor
           value={plantCopy.pumpSensor?.toString()}
-          onSenorChange={(value) =>
-            handleSensorChange(parseInt(value), "pumpSensor")
-          }
+          onSenorChange={(value) => handleSensorChange(value, 'pumpSensor')}
           disabled={!plantCopy.usehumiditySoil || !plantCopy.usePump}
           withLabel={false}
+          unit="pump"
         />
       </div>
 
       <div className="flex w-full ">
         <p
           className={`mr-12 basis-32 ${
-            (!plantCopy.usePump || !plantCopy.usehumiditySoil) &&
-            "text-gray-400"
-          }`}>
+            (!plantCopy.usePump || !plantCopy.usehumiditySoil) && 'text-gray-400'
+          }`}
+        >
           start {plantCopy.startPump}%
         </p>
         <Slider
@@ -200,16 +190,16 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
           step={1}
           value={[plantCopy.startPump]}
           disabled={!plantCopy.usePump || !plantCopy.usehumiditySoil}
-          onValueChange={(e) => handlePumpStartStopChange(e[0], "startPump")}
+          onValueChange={(e) => handlePumpStartStopChange(e[0], 'startPump')}
         />
       </div>
 
       <div className="flex w-full">
         <p
           className={`mr-12 basis-32 ${
-            (!plantCopy.usePump || !plantCopy.usehumiditySoil) &&
-            "text-gray-400"
-          }`}>
+            (!plantCopy.usePump || !plantCopy.usehumiditySoil) && 'text-gray-400'
+          }`}
+        >
           stop {plantCopy.stopPump}%
         </p>
         <Slider
@@ -220,7 +210,7 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
           step={1}
           value={[plantCopy.stopPump]}
           disabled={!plantCopy.usePump || !plantCopy.usehumiditySoil}
-          onValueChange={(e) => handlePumpStartStopChange(e[0], "stopPump")}
+          onValueChange={(e) => handlePumpStartStopChange(e[0], 'stopPump')}
         />
       </div>
 
@@ -229,16 +219,16 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
           variant="outline"
           className="p-1 h-fit pl-3 pr-3"
           disabled={!hasChanged}
-          onClick={() => handleSave(id)}>
+          onClick={() => handleSave(id)}
+        >
           Save
         </Button>
         <Button
-          variant={!hasChanged ? "outline" : "destructive"}
-          className={`p-1 h-fit pl-3 pr-3 ${
-            hasChanged && "bg-red-200"
-          } text-black`}
+          variant={!hasChanged ? 'outline' : 'destructive'}
+          className={`p-1 h-fit pl-3 pr-3 ${hasChanged && 'bg-red-200'} text-black`}
           disabled={!hasChanged}
-          onClick={handleResett}>
+          onClick={handleResett}
+        >
           Resett
         </Button>
       </div>
@@ -247,9 +237,7 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
         <div className="flex justify-center w-full mt-2">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button
-                variant={"destructive"}
-                className="p-1 h-fit bg-red-400 pl-3 pr-3">
+              <Button variant={'destructive'} className="p-1 h-fit bg-red-400 pl-3 pr-3">
                 Delete
               </Button>
             </DropdownMenuTrigger>
@@ -275,4 +263,4 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
   );
 };
 
-export default PlantConfig;
+export default memo(PlantConfig);

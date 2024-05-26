@@ -4,28 +4,28 @@
       "min": 21,
       "max": 23,
       "active": true,
-      "current": 23.23
+      "current": 20
     },
     "humidityAir": {
       "min": 41,
       "max": 74,
-      "active": true,
-      "current": 87.58
+      "active": false,
+      "current": 50
     },
     "light": {
       "active": true,
-      "current": 1
+      "current": 10
     },
     "fan": {
       "active": true,
-      "current": 1,
-      "sensor": "A/7"
+      "current": 0,
+      "sensor": "A/3"
     },
     "pressure": {
       "min": 1000,
       "max": 1010,
       "active": true,
-      "current": 679.1
+      "current": 1013.25
     }
   },
   "plantConfig": [
@@ -33,14 +33,14 @@
       "id": 1,
       "soilName": "Composit light Mix",
       "name": "Paprika",
-      "humiditySoil": "-144.5",
+      "humiditySoil": "50",
       "waterOn": true,
       "usehumiditySoil": true,
       "soilSensor": "E/01",
       "usePump": true,
       "pumpSensor": "A/1",
-      "startPump": 10,
-      "stopPump": 50
+      "startPump": 0,
+      "stopPump": 67
     },
     {
       "id": 2,
@@ -70,16 +70,16 @@
     },
     {
       "id": 4,
-      "name": "cucumber",
-      "soilName": "no clue",
+      "name": "Pimmellile",
+      "soilName": "Euft",
       "humiditySoil": "",
       "waterOn": false,
-      "soilSensor": null,
+      "soilSensor": "E/03",
       "pumpSensor": "A/4",
-      "usehumiditySoil": false,
-      "usePump": false,
+      "usehumiditySoil": true,
+      "usePump": true,
       "startPump": 0,
-      "stopPump": 2
+      "stopPump": 1
     }
   ],
   "sensors": {
