@@ -61,19 +61,7 @@ export type Data = {
             sensor?: PinKey | null
         }
     }
-    plantConfig: {
-        id: number
-        soilName: string
-        name: string
-        humiditySoil: string
-        waterOn: boolean
-        usehumiditySoil: boolean
-        soilSensor: SoilLabelList | null
-        usePump: boolean
-        pumpSensor: PinKey | null
-        startPump: number
-        stopPump: number
-    }[]
+    plantConfig: Plant[]
     sensors: {
         adcSensors: {
             'E/01': {
