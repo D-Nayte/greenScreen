@@ -1,66 +1,82 @@
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { useData } from "@/context/data";
-import { pinList } from "../../utils/constant";
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
+import { useData } from '@/context/data'
+import { pinList } from '../../utils/constant'
+import { PinKey, SoilLabelList } from '../../types/sensor'
+import e from 'express'
+import { useState } from 'react'
 
 type Props = {
-  value: string | null | undefined;
-  onSenorChange: (value: string) => void;
-  disabled?: boolean;
-  withLabel?: boolean;
-};
+    value: string | null | undefined
+    onSenorChange: (value: SoilLabelList | PinKey) => void
+    disabled?: boolean
+    withLabel?: boolean
+    unit: 'soil' | 'pump'
+}
 
 const SelectSensor = ({
-  value,
-  onSenorChange,
-  disabled,
-  withLabel = true,
+    value,
+    onSenorChange,
+    disabled,
+    unit,
+    withLabel = true,
 }: Props) => {
-  const { data } = useData();
-  const generallSensors = Object.values(data?.generall || {})
-    .map((item) => item.active && item?.sensor && item.sensor)
-    .filter((item) => item);
-  const plantsSensor = data?.plantConfig
-    ? data.plantConfig
+    const { data } = useData()
+    const humiditySensors = Object.keys(
+        data?.sensors.adcSensors || {}
+    ) as SoilLabelList[]
+    const pumpOutgoings = Object.keys(pinList) as PinKey[]
+    const usedHumiditySensors = (data?.plantConfig || [])
         .map((item) => item.usehumiditySoil && item.soilSensor)
-        .filter((item) => item)
-    : [];
-  const usedSensors = [...generallSensors, ...plantsSensor].filter(
-    (item) => item
-  ) as string[];
-  const sensors = Object.keys(pinList);
-  const sensorTotal = sensors.length;
+        .filter((item) => item) as string[]
 
-  return (
-    <>
-      {withLabel && <Label htmlFor="sensor">Sensor</Label>}
-      <Select onValueChange={onSenorChange} value={value || ""}>
-        <SelectTrigger id="sensor" className="w-[150px]" disabled={disabled}>
-          <SelectValue placeholder="Select" />
-        </SelectTrigger>
-        <SelectContent
-          onCloseAutoFocus={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}>
-          {sensors.map((label, index) => (
-            <SelectItem
-              key={index}
-              value={label}
-              disabled={value ? usedSensors.includes(value) : false}>
-              {index + 1}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </>
-  );
-};
+    const usedPumpOutgoings = (data?.plantConfig || [])
+        .map((item) => item.usePump && item.pumpSensor)
+        .filter((item) => item) as string[]
+    const usedList = unit === 'soil' ? usedHumiditySensors : usedPumpOutgoings
+    const selectList = unit === 'soil' ? humiditySensors : pumpOutgoings
+    const [open, setopen] = useState(false)
 
-export default SelectSensor;
+    return (
+        <div>
+            {withLabel && <Label htmlFor="sensor">Sensor</Label>}
+            <Select value={value || ''} open={open}>
+                <SelectTrigger
+                    id="sensor"
+                    className="w-[150px]"
+                    disabled={disabled}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setopen(true)
+                    }}
+                >
+                    <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                    {selectList.map((label, index) => (
+                        <SelectItem
+                            key={index}
+                            value={label}
+                            disabled={usedList.includes(label)}
+                            onClick={() => {
+                                setopen(false)
+                                onSenorChange(label)
+                            }}
+                        >
+                            {label}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+        </div>
+    )
+}
+
+export default SelectSensor

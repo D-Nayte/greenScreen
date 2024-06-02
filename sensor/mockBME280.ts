@@ -1,9 +1,9 @@
 import { EnvSensorData } from '../types/sensor';
 
-export class MockI2CBus {
+export class MockBME280 {
   constructor() {}
   async init() {
-    console.info('Mocking I2C Bus - RUNN');
+    console.info('Mocking MockBME280');
   }
 
   async readSensorData(): Promise<EnvSensorData> {

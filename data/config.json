@@ -1,137 +1,149 @@
 {
-  "generall": {
-    "temperature": {
-      "min": 21,
-      "max": 23,
-      "active": true,
-      "current": 24.97
+    "generall": {
+        "temperature": {
+            "min": 21,
+            "max": 23,
+            "active": true,
+            "current": 24.97
+        },
+        "humidityAir": {
+            "min": 41,
+            "max": 74,
+            "active": true,
+            "current": 58.02
+        },
+        "light": {
+            "active": true,
+            "current": 10
+        },
+        "fan": {
+            "active": true,
+            "current": 0,
+            "sensor": "A/3"
+        },
+        "pressure": {
+            "min": 1000,
+            "max": 1010,
+            "active": true,
+            "current": 994.39
+        }
     },
-    "humidityAir": {
-      "min": 41,
-      "max": 74,
-      "active": true,
-      "current": 58.02
-    },
-    "light": {
-      "active": true,
-      "current": 1
-    },
-    "fan": {
-      "active": true,
-      "current": 1,
-      "sensor": "A/7"
-    },
-    "pressure": {
-      "min": 1000,
-      "max": 1010,
-      "active": true,
-      "current": 994.39
+    "plantConfig": [
+        {
+            "id": 1,
+            "soilName": "Composit light Mix",
+            "name": "Paprika",
+            "humiditySoil": "2.5",
+            "waterOn": true,
+            "usehumiditySoil": true,
+            "soilSensor": "E/05",
+            "usePump": true,
+            "throughput": 800,
+            "pourAmount": 1,
+            "pumpSensor": "A/1",
+            "startPump": 25,
+            "stopPump": 67,
+            "timeLeftPouring": 4500
+        },
+        {
+            "id": 2,
+            "soilName": "Composit light Mix",
+            "name": "Tomato",
+            "humiditySoil": "2.6",
+            "waterOn": false,
+            "usehumiditySoil": true,
+            "soilSensor": "E/02",
+            "usePump": false,
+            "throughput": 5,
+            "pourAmount": 5,
+            "pumpSensor": "A/2",
+            "startPump": 10,
+            "stopPump": 2,
+            "timeLeftPouring": 0
+        },
+        {
+            "id": 3,
+            "soilName": "Composit",
+            "name": "Banana",
+            "humiditySoil": "-5.5",
+            "waterOn": true,
+            "usehumiditySoil": true,
+            "soilSensor": null,
+            "usePump": false,
+            "throughput": 5,
+            "pourAmount": 5,
+            "pumpSensor": "A/3",
+            "startPump": 1,
+            "stopPump": 2,
+            "timeLeftPouring": 0
+        },
+        {
+            "id": 4,
+            "name": "Pimmellile",
+            "soilName": "Euft",
+            "humiditySoil": "",
+            "waterOn": false,
+            "soilSensor": "E/03",
+            "pumpSensor": "A/4",
+            "usehumiditySoil": true,
+            "usePump": true,
+            "throughput": 5,
+            "pourAmount": 5,
+            "startPump": 0,
+            "stopPump": 1,
+            "timeLeftPouring": 0
+        }
+    ],
+    "sensors": {
+        "adcSensors": {
+            "E/01": {
+                "address": "0x49",
+                "channel": "P1",
+                "h_0_min": 19707.133333333335,
+                "h_100_max": 10668.4,
+                "activeToId": 1,
+                "active": true
+            },
+            "E/02": {
+                "address": "0x49",
+                "channel": "P2",
+                "h_0_min": 19707.133333333335,
+                "h_100_max": 10668.4,
+                "activeToId": 2,
+                "active": false
+            },
+            "E/03": {
+                "address": "0x49",
+                "channel": "P3",
+                "h_0_min": 0,
+                "h_100_max": 0,
+                "activeToId": 3,
+                "active": false
+            },
+            "E/04": {
+                "address": "0x48",
+                "channel": "P0",
+                "h_0_min": 0,
+                "h_100_max": 0,
+                "activeToId": 4,
+                "active": false
+            },
+            "E/05": {
+                "address": "0x48",
+                "channel": "P1",
+                "h_0_min": 19773.966666666667,
+                "h_100_max": 16412.933333333334,
+                "activeToId": 1,
+                "active": true
+            },
+            "E/06": {
+                "address": "0x48",
+                "channel": "P2",
+                "h_0_min": 0,
+                "h_100_max": 0,
+                "activeToId": 6,
+                "active": false
+            }
+        }
     }
-  },
-  "plantConfig": [
-    {
-      "id": 1,
-      "soilName": "Composit light Mix",
-      "name": "Paprika",
-      "humiditySoil": "2.5",
-      "waterOn": true,
-      "usehumiditySoil": true,
-      "soilSensor": "E/05",
-      "usePump": true,
-      "pumpSensor": "A/1",
-      "startPump": 10,
-      "stopPump": 50
-    },
-    {
-      "id": 2,
-      "soilName": "Composit light Mix",
-      "name": "Tomato",
-      "humiditySoil": "2.6",
-      "waterOn": false,
-      "usehumiditySoil": true,
-      "soilSensor": "E/02",
-      "usePump": false,
-      "pumpSensor": "A/2",
-      "startPump": 10,
-      "stopPump": 2
-    },
-    {
-      "id": 3,
-      "soilName": "Composit",
-      "name": "Banana",
-      "humiditySoil": "-5.5",
-      "waterOn": true,
-      "usehumiditySoil": true,
-      "soilSensor": null,
-      "usePump": false,
-      "pumpSensor": "A/3",
-      "startPump": 1,
-      "stopPump": 2
-    },
-    {
-      "id": 4,
-      "name": "cucumber",
-      "soilName": "no clue",
-      "humiditySoil": "",
-      "waterOn": false,
-      "soilSensor": null,
-      "pumpSensor": "A/4",
-      "usehumiditySoil": false,
-      "usePump": false,
-      "startPump": 0,
-      "stopPump": 2
-    }
-  ],
-  "sensors": {
-    "adcSensors": {
-      "E/01": {
-        "address": "0x49",
-        "channel": "P1",
-        "h_0_min": 19707.133333333335,
-        "h_100_max": 10668.4,
-        "activeToId": 1,
-        "active": true
-      },
-      "E/02": {
-        "address": "0x49",
-        "channel": "P2",
-        "h_0_min": 19707.133333333335,
-        "h_100_max": 10668.4,
-        "activeToId": 2,
-        "active": false
-      },
-      "E/03": {
-        "address": "0x49",
-        "channel": "P3",
-        "h_0_min": 0,
-        "h_100_max": 0,
-        "activeToId": 3,
-        "active": false
-      },
-      "E/04": {
-        "address": "0x48",
-        "channel": "P0",
-        "h_0_min": 0,
-        "h_100_max": 0,
-        "activeToId": 4,
-        "active": false
-      },
-      "E/05": {
-        "address": "0x48",
-        "channel": "P1",
-        "h_0_min": 19773.966666666667,
-        "h_100_max": 16412.933333333334,
-        "activeToId": 1,
-        "active": true
-      },
-      "E/06": {
-        "address": "0x48",
-        "channel": "P2",
-        "h_0_min": 0,
-        "h_100_max": 0,
-        "activeToId": 6,
-        "active": false
-      }
-    }
-  }
 }

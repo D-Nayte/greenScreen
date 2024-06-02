@@ -1,24 +1,28 @@
-import { exec } from "child_process";
-import { Data, PinKey } from "../types/sensor";
-import { pinList } from "../utils/constant";
+import { exec } from 'child_process';
+import { Data, PinKey } from '../types/sensor';
+import { pinList } from '../utils/constant';
 
-exec("pgrep pigpiod", (error, stdout, stderr) => {
-  if (stdout) {
-    console.info("pigpiod läuft bereits");
-  } else {
-    console.info("pigpiod läuft nicht");
+const isLinux = process.platform === 'linux';
 
-    exec("sudo pigpiod", (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Fehler beim Starten von pigpiod: ${stderr}`);
-        return;
-      }
-      console.info("pigpiod gestartet");
-    });
-  }
-});
+isLinux &&
+  exec('pgrep pigpiod', (error, stdout, stderr) => {
+    if (stdout) {
+      console.info('pigpiod läuft bereits');
+    } else {
+      console.info('pigpiod läuft nicht');
+
+      exec('sudo pigpiod', (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Fehler beim Starten von pigpiod: ${stderr}`);
+          return;
+        }
+        console.info('pigpiod gestartet');
+      });
+    }
+  });
 
 export const enableRelaiPower = async () => {
+  if (!isLinux) return console.log('not on linux, mocking relai on');
   const pin = 26;
 
   runCommand(`pigs w ${pin} 0`, () => {
@@ -27,6 +31,7 @@ export const enableRelaiPower = async () => {
 };
 
 export const disableRelaiPower = async () => {
+  if (!isLinux) return console.log('not on linux, mocking relai off');
   const pin = 26;
 
   runCommand(`pigs w ${pin} 1`, () => {
@@ -64,6 +69,8 @@ const runCommand = (command: string, callback: (stdout: string) => void) => {
 };
 
 export const enableGpio = async (pinKey: PinKey) => {
+  if (!isLinux) return console.log(`nicht auf linux, mocking ${pinKey} eingeschaltet`);
+
   const isEnabled = await checkGpioStatus(pinKey);
   if (isEnabled) return console.log(`${pinKey} ist bereits eingeschaltet`);
   if (isEnabled === null) return console.log(`${pinKey} nicht angeschlossen!`);
@@ -75,10 +82,11 @@ export const enableGpio = async (pinKey: PinKey) => {
 };
 
 export const disableGpio = async (pinKey: PinKey) => {
+  if (!isLinux) return console.log(`nicht auf linux, mocking ${pinKey} ausgeschaltet`);
+
   const pin = pinList[pinKey];
   const isEnabled = await checkGpioStatus(pinKey);
-  if (isEnabled === false)
-    return console.log(`${pinKey} ist bereits ausgeschaltet`);
+  if (isEnabled === false) return console.log(`${pinKey} ist bereits ausgeschaltet`);
   if (isEnabled === null) return console.log(`${pin} nicht angeschlossen!`);
 
   runCommand(`pigs w ${pin} 0`, () => {
@@ -89,14 +97,10 @@ export const disableGpio = async (pinKey: PinKey) => {
 export const handleRelaiChanges = (configData: Data) => {
   //  activate fan
   const fan = configData.generall.fan;
-  fan.current && fan.active
-    ? enableGpio(fan.sensor!)
-    : disableGpio(fan.sensor!);
+  fan.current && fan.active ? enableGpio(fan.sensor!) : disableGpio(fan.sensor!);
 
   //  activate plant pumps
-  const plants = configData.plantConfig.filter(
-    (plant) => plant.usePump && plant.pumpSensor
-  );
+  const plants = configData.plantConfig.filter((plant) => plant.usePump && plant.pumpSensor);
 
   plants.forEach((plant) => {
     // enableGpio(plant.pumpSensor as PinKey);

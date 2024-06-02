@@ -3,22 +3,27 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import ConfigTemplate from "./ConfigTemplate";
-import PlantConfig from "./PlantConfig";
-import { useData } from "@/context/data";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PiPlant } from "react-icons/pi";
-import { IoAddCircleOutline } from "react-icons/io5";
-import { Data } from "../../types/sensor";
+} from '@/components/ui/accordion';
+import ConfigTemplate from './ConfigTemplate';
+import PlantConfig from './PlantConfig';
+import { useData } from '@/context/data';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PiPlant } from 'react-icons/pi';
+import { IoAddCircleOutline } from 'react-icons/io5';
+import { Data } from '../../types/sensor';
+import { useShallow } from 'zustand/react/shallow';
+import { memo } from 'react';
 
 const ConfigGlobal = () => {
-  const { data } = useData();
-  const newPLant: Data["plantConfig"][number] = {
+  const { data } = useData(
+    useShallow((state) => ({ data: state.data })),
+    () => false
+  );
+  const newPLant: Data['plantConfig'][number] = {
     id: data?.plantConfig?.length ? data?.plantConfig?.length + 1 : 0,
-    name: "New Plant",
-    soilName: "Soil",
-    humiditySoil: "",
+    name: 'New Plant',
+    soilName: 'Soil',
+    humiditySoil: '',
     waterOn: false,
     soilSensor: null,
     pumpSensor: null,
@@ -35,9 +40,7 @@ const ConfigGlobal = () => {
       <section>
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger className="hover:no-underline">
-              Temperature
-            </AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">Temperature</AccordionTrigger>
             <AccordionContent>
               <ConfigTemplate
                 config="temperature"
@@ -53,9 +56,7 @@ const ConfigGlobal = () => {
 
         <Accordion type="single" collapsible>
           <AccordionItem value="item-2">
-            <AccordionTrigger className="hover:no-underline">
-              Humidity Air
-            </AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">Humidity Air</AccordionTrigger>
             <AccordionContent>
               <ConfigTemplate
                 config="humidityAir"
@@ -71,9 +72,7 @@ const ConfigGlobal = () => {
 
         <Accordion type="single" collapsible>
           <AccordionItem value="item-3">
-            <AccordionTrigger className="hover:no-underline">
-              Light
-            </AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">Light</AccordionTrigger>
             <AccordionContent>
               <ConfigTemplate config="light" />
             </AccordionContent>
@@ -82,9 +81,7 @@ const ConfigGlobal = () => {
 
         <Accordion type="single" collapsible>
           <AccordionItem value="item-4">
-            <AccordionTrigger className="hover:no-underline">
-              Fan
-            </AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">Fan</AccordionTrigger>
             <AccordionContent>
               <ConfigTemplate config="fan" hasSensor={true} />
             </AccordionContent>
@@ -93,9 +90,7 @@ const ConfigGlobal = () => {
 
         <Accordion type="single" collapsible>
           <AccordionItem value="item-5">
-            <AccordionTrigger className="hover:no-underline">
-              Plants
-            </AccordionTrigger>
+            <AccordionTrigger className="hover:no-underline">Plants</AccordionTrigger>
             <AccordionContent>
               <Tabs defaultValue="plants" className="w-full">
                 <TabsList>
@@ -116,11 +111,7 @@ const ConfigGlobal = () => {
                               {plant.name}
                             </AccordionTrigger>
                             <AccordionContent className="ml-2">
-                              <PlantConfig
-                                key={plant.id}
-                                plant={plant}
-                                id={plant.id}
-                              />
+                              <PlantConfig key={plant.id} plant={plant} id={plant.id} />
                             </AccordionContent>
                           </AccordionItem>
                         </Accordion>
@@ -142,4 +133,4 @@ const ConfigGlobal = () => {
   );
 };
 
-export default ConfigGlobal;
+export default memo(ConfigGlobal);

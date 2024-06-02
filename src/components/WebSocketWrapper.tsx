@@ -13,8 +13,6 @@ const WebSocketWrapper = ({ children }: { children: ReactNode }) => {
       _setData(data);
     });
 
-    // eslint-disable-next-line
-
     return () => {
       socket.off('sendData');
     };

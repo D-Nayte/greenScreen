@@ -7,13 +7,14 @@ export const readData = () => {
   return JSON.parse(data) as Data;
 };
 
+let configData: Data = readData();
+
 export const writeData = (data: Data) => {
   fs.writeFileSync('./data/config.json', JSON.stringify(data, null, 2), 'utf8');
   const newData = readData();
+  configData = newData;
   return newData;
 };
-
-let configData: Data = readData();
 
 setInterval(() => {
   configData = readData();

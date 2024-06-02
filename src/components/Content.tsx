@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ConfigGlobal from './ConfigGlobal';
 import OverviewGenerell from './OverviewGenerell';
 import Plants from './Plants';
+import { memo } from 'react';
 
 type ContentProps = {
   tabs: 'overview' | 'config';
@@ -27,4 +28,4 @@ const Content = ({ tabs }: ContentProps) => {
   );
 };
 
-export default Content;
+export default memo(Content);
