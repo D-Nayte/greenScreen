@@ -4,13 +4,13 @@
             "min": 21,
             "max": 23,
             "active": true,
-            "current": 24.97
+            "current": 24.87
         },
         "humidityAir": {
             "min": 41,
             "max": 74,
             "active": true,
-            "current": 58.02
+            "current": 57.67
         },
         "light": {
             "active": true,
@@ -18,14 +18,14 @@
         },
         "fan": {
             "active": true,
-            "current": 0,
-            "sensor": "A/3"
+            "current": 1,
+            "sensor": "A/7"
         },
         "pressure": {
             "min": 1000,
             "max": 1010,
             "active": true,
-            "current": 994.39
+            "current": 994.26
         }
     },
     "plantConfig": [
@@ -33,7 +33,7 @@
             "id": 1,
             "soilName": "Composit light Mix",
             "name": "Paprika",
-            "humiditySoil": "2.5",
+            "humiditySoil": "1.2",
             "waterOn": true,
             "usehumiditySoil": true,
             "soilSensor": "E/05",
@@ -44,54 +44,6 @@
             "startPump": 25,
             "stopPump": 67,
             "timeLeftPouring": 4500
-        },
-        {
-            "id": 2,
-            "soilName": "Composit light Mix",
-            "name": "Tomato",
-            "humiditySoil": "2.6",
-            "waterOn": false,
-            "usehumiditySoil": true,
-            "soilSensor": "E/02",
-            "usePump": false,
-            "throughput": 5,
-            "pourAmount": 5,
-            "pumpSensor": "A/2",
-            "startPump": 10,
-            "stopPump": 2,
-            "timeLeftPouring": 0
-        },
-        {
-            "id": 3,
-            "soilName": "Composit",
-            "name": "Banana",
-            "humiditySoil": "-5.5",
-            "waterOn": true,
-            "usehumiditySoil": true,
-            "soilSensor": null,
-            "usePump": false,
-            "throughput": 5,
-            "pourAmount": 5,
-            "pumpSensor": "A/3",
-            "startPump": 1,
-            "stopPump": 2,
-            "timeLeftPouring": 0
-        },
-        {
-            "id": 4,
-            "name": "Pimmellile",
-            "soilName": "Euft",
-            "humiditySoil": "",
-            "waterOn": false,
-            "soilSensor": "E/03",
-            "pumpSensor": "A/4",
-            "usehumiditySoil": true,
-            "usePump": true,
-            "throughput": 5,
-            "pourAmount": 5,
-            "startPump": 0,
-            "stopPump": 1,
-            "timeLeftPouring": 0
         }
     ],
     "sensors": {

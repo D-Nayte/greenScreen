@@ -62,11 +62,11 @@ const readSensors = async () => {
         console.error(error)
     }
 
-    try {
-        handleLightSensor(configData)
-    } catch (error) {
-        console.error(error)
-    }
+    // try {
+    //     handleLightSensor(configData)
+    // } catch (error) {
+    //     console.error(error)
+    // }
 
     handleRelaiChanges(configData)
 

@@ -23,7 +23,11 @@ const TSL2561_REGISTER_CHAN1_LOW = 0x0e
 const bus = i2c.openSync(1)
 
 function writeByte(addr: number, cmd: number, byte: number) {
-    bus.writeByteSync(addr, cmd, byte)
+    try {
+        bus.writeByteSync(addr, cmd, byte)
+    } catch (error) {
+        console.error('Error in Lightsensor writing byte: ', error)
+    }
 }
 
 function _readWord(addr: number, cmd: number) {
