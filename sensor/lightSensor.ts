@@ -14,7 +14,11 @@ const isLinux = process.platform === "linux";
 const bus = i2c.openSync(1);
 
 function writeByte(addr: number, cmd: number, byte: number) {
-  bus.writeByteSync(addr, cmd, byte);
+  try {
+    bus.writeByteSync(addr, cmd, byte);
+  } catch (error) {
+    console.error(`Error in writing to light sensor: ${error}`);
+  }
 }
 
 function _readWord(addr: number, cmd: number) {

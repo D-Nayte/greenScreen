@@ -1,6 +1,7 @@
 import { spawn } from "child_process";
 import config from "../data/config.json" assert { type: "json" };
 import { Data, SoilLabelList } from "../types/sensor";
+import { readData, writeData } from "../utils/readConfig";
 // import { getConfigData } from "../utils/readConfig";
 
 type CalData = {
@@ -79,7 +80,15 @@ export const calibrateAdcSensors = (
       if (!dataString.includes("Calibration Data: "))
         return console.log("data :>> ", dataString);
       const [_, calDataJSOn] = dataString.split("Calibration Data: ");
-      resolve(JSON.parse(calDataJSOn) as CalData);
+      const { h_0_min_cal, h_100_max_cal } = JSON.parse(calDataJSOn) as CalData;
+      const configData = readData();
+      configData.sensors.adcSensors[sensorLabel] = {
+        ...configData.sensors.adcSensors[sensorLabel],
+        h_0_min: h_0_min_cal,
+        h_100_max: h_100_max_cal,
+      };
+      writeData(configData);
+      resolve({ h_0_min_cal, h_100_max_cal });
     });
 
     readProcess.stderr.on("data", (data) => {

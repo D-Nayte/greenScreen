@@ -18,8 +18,8 @@ def print(*args, **kwargs):
 
 
 args = sys.argv
-calibrationTime30Seconds = 1
-timeToStart=1
+calibrationTime30Seconds = 30
+timeToStart=10
 h_0_min_cal = 0
 h_100_max_cal = 0
 parser = argparse.ArgumentParser()
@@ -56,6 +56,8 @@ def calibrateHigh(chan):
     h_100_max_cal = sum(h_0_max) / len(h_0_max)
 
 def calibrate(address, channel):
+    print("address",address)
+    print("channel",channel)
     global timeToStart
     start = timeToStart
     ads = ADS.ADS1115(i2c, address=int(address, 16))
@@ -73,7 +75,7 @@ def calibrate(address, channel):
 
     print("Calibration high")
     while start > 0:
-        print(f"Starting in {start} seconds")
+        print(f"Starting in {start} seconds, put your sensor in water")
         time.sleep(1)
         start -= 1
     print("Calibrating high, put your sensor in water")

@@ -107,30 +107,6 @@ export type Data = {
         activeToId: number;
         active: boolean;
       };
-      "E/07": {
-        address: string;
-        channel: string;
-        h_0_min: number;
-        h_100_max: number;
-        activeToId: number;
-        active: boolean;
-      };
-      "E/08": {
-        address: string;
-        channel: string;
-        h_0_min: number;
-        h_100_max: number;
-        activeToId: number;
-        active: boolean;
-      };
-      "E/09": {
-        address: string;
-        channel: string;
-        h_0_min: number;
-        h_100_max: number;
-        activeToId: number;
-        active: boolean;
-      };
     };
   };
 };
