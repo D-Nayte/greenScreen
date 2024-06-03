@@ -1,101 +1,101 @@
 {
-    "generall": {
-        "temperature": {
-            "min": 21,
-            "max": 23,
-            "active": true,
-            "current": 24.87
-        },
-        "humidityAir": {
-            "min": 41,
-            "max": 74,
-            "active": true,
-            "current": 57.67
-        },
-        "light": {
-            "active": true,
-            "current": 10
-        },
-        "fan": {
-            "active": true,
-            "current": 1,
-            "sensor": "A/7"
-        },
-        "pressure": {
-            "min": 1000,
-            "max": 1010,
-            "active": true,
-            "current": 994.26
-        }
+  "generall": {
+    "temperature": {
+      "min": 21,
+      "max": 23,
+      "active": true,
+      "current": 20
     },
-    "plantConfig": [
-        {
-            "id": 1,
-            "soilName": "Composit light Mix",
-            "name": "Paprika",
-            "humiditySoil": "1.2",
-            "waterOn": true,
-            "usehumiditySoil": true,
-            "soilSensor": "E/05",
-            "usePump": true,
-            "throughput": 800,
-            "pourAmount": 1,
-            "pumpSensor": "A/1",
-            "startPump": 25,
-            "stopPump": 67,
-            "timeLeftPouring": 4500
-        }
-    ],
-    "sensors": {
-        "adcSensors": {
-            "E/01": {
-                "address": "0x49",
-                "channel": "P1",
-                "h_0_min": 19707.133333333335,
-                "h_100_max": 10668.4,
-                "activeToId": 1,
-                "active": true
-            },
-            "E/02": {
-                "address": "0x49",
-                "channel": "P2",
-                "h_0_min": 19707.133333333335,
-                "h_100_max": 10668.4,
-                "activeToId": 2,
-                "active": false
-            },
-            "E/03": {
-                "address": "0x49",
-                "channel": "P3",
-                "h_0_min": 0,
-                "h_100_max": 0,
-                "activeToId": 3,
-                "active": false
-            },
-            "E/04": {
-                "address": "0x48",
-                "channel": "P0",
-                "h_0_min": 0,
-                "h_100_max": 0,
-                "activeToId": 4,
-                "active": false
-            },
-            "E/05": {
-                "address": "0x48",
-                "channel": "P1",
-                "h_0_min": 19773.966666666667,
-                "h_100_max": 16412.933333333334,
-                "activeToId": 1,
-                "active": true
-            },
-            "E/06": {
-                "address": "0x48",
-                "channel": "P2",
-                "h_0_min": 0,
-                "h_100_max": 0,
-                "activeToId": 6,
-                "active": false
-            }
-        }
+    "humidityAir": {
+      "min": 41,
+      "max": 74,
+      "active": true,
+      "current": 50
+    },
+    "light": {
+      "active": true,
+      "current": 10
+    },
+    "fan": {
+      "active": true,
+      "current": 0,
+      "sensor": "A/7"
+    },
+    "pressure": {
+      "min": 1000,
+      "max": 1010,
+      "active": true,
+      "current": 1013.25
     }
+  },
+  "plantConfig": [
+    {
+      "id": 1,
+      "soilName": "Composit light Mix",
+      "name": "Paprika",
+      "humiditySoil": "1",
+      "waterOn": true,
+      "usehumiditySoil": true,
+      "soilSensor": "E/05",
+      "usePump": true,
+      "throughput": 800,
+      "pourAmount": 1,
+      "pumpSensor": "A/1",
+      "startPump": 25,
+      "stopPump": 67,
+      "timeLeftPouring": 4500
+    }
+  ],
+  "sensors": {
+    "adcSensors": {
+      "E/01": {
+        "address": "0x49",
+        "channel": "P1",
+        "h_0_min": 19707.133333333335,
+        "h_100_max": 10668.4,
+        "activeToId": 1,
+        "active": true
+      },
+      "E/02": {
+        "address": "0x49",
+        "channel": "P2",
+        "h_0_min": 19707.133333333335,
+        "h_100_max": 10668.4,
+        "activeToId": 2,
+        "active": false
+      },
+      "E/03": {
+        "address": "0x49",
+        "channel": "P3",
+        "h_0_min": 0,
+        "h_100_max": 0,
+        "activeToId": 3,
+        "active": false
+      },
+      "E/04": {
+        "address": "0x48",
+        "channel": "P0",
+        "h_0_min": 0,
+        "h_100_max": 0,
+        "activeToId": 4,
+        "active": false
+      },
+      "E/05": {
+        "address": "0x48",
+        "channel": "P1",
+        "h_0_min": 300,
+        "h_100_max": 900,
+        "activeToId": 1,
+        "active": true
+      },
+      "E/06": {
+        "address": "0x48",
+        "channel": "P2",
+        "h_0_min": 0,
+        "h_100_max": 0,
+        "activeToId": 6,
+        "active": false
+      }
+    }
+  }
 }

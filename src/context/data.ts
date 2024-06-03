@@ -1,18 +1,17 @@
-'use client';
+'use client'
 
-import { create } from 'zustand';
-import { Data } from '../../types/sensor';
-import { createWithEqualityFn } from 'zustand/traditional';
+import { Data } from '../../types/sensor'
+import { createWithEqualityFn } from 'zustand/traditional'
 
 type SocketState = {
-  data: Data | null;
-  _setData: (data: Data) => void;
-};
+    data: Data | null
+    _setData: (data: Data) => void
+}
 
 export const useData = createWithEqualityFn<SocketState>((set) => ({
-  data: null,
+    data: null,
 
-  _setData: (receivedData) => {
-    set(() => ({ data: receivedData }));
-  },
-}));
+    _setData: (receivedData) => {
+        set(() => ({ data: receivedData }))
+    },
+}))

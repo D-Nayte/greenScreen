@@ -1,9 +1,16 @@
-import { spawn } from 'child_process'
+import { spawn, ChildProcessWithoutNullStreams } from 'child_process'
 import config from '../data/config.json' assert { type: 'json' }
 import { Data, SoilLabelList } from '../types/sensor'
 import { readData, writeData } from '../utils/readConfig'
 import { SECOND_IN_MS } from '../utils/constant'
-// import { getConfigData } from "../utils/readConfig";
+import { Socket } from 'socket.io'
+import {
+    ClientToServerEvents,
+    InterServerEvents,
+    ServerToClientEvents,
+    SocketData,
+} from '../server'
+import MockChildProcess from './mockCalibration'
 
 type CalData = {
     h_0_min_cal: number
@@ -75,11 +82,17 @@ export const readAdcData = (): Promise<ReadDat> => {
 }
 
 export const calibrateAdcSensors = (
-    sensorLabel: SoilLabelList
+    sensorLabel: SoilLabelList,
+    socket: Socket<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        SocketData
+    >
 ): Promise<CalData> => {
     const adcSensors = config.sensors.adcSensors
     const { address, channel } = adcSensors[sensorLabel]
-    const calPrams = [
+    const calParams = [
         folderPath,
         '--calibrate',
         '-addr',
@@ -88,14 +101,36 @@ export const calibrateAdcSensors = (
         channel,
     ]
 
-    const readProcess = spawn(py, calPrams)
+    let readProcess: ChildProcessWithoutNullStreams
+
+    if (isLinux) {
+        readProcess = spawn(py, calParams)
+    } else {
+        const mockProcess = new MockChildProcess()
+        readProcess = mockProcess as unknown as ChildProcessWithoutNullStreams
+
+        const intervallID = setInterval(() => {
+            mockProcess.stdout.emit('data', 'mokcing calibration data')
+        }, 1000)
+
+        setTimeout(() => {
+            clearInterval(intervallID)
+            mockProcess.stdout.emit(
+                'data',
+                'Calibration Data: {"h_0_min_cal": 300, "h_100_max_cal": 900}'
+            )
+        }, 8000)
+    }
 
     return new Promise((resolve, reject) => {
         readProcess.stdout.on('data', (data) => {
             const dataString = `${data}`
 
-            if (!dataString.includes('Calibration Data: '))
+            if (!dataString.includes('Calibration Data: ')) {
+                socket.emit('calibrationMessage', dataString)
                 return console.log('data :>> ', dataString)
+            }
+
             const [_, calDataJSOn] = dataString.split('Calibration Data: ')
             const { h_0_min_cal, h_100_max_cal } = JSON.parse(
                 calDataJSOn
@@ -107,6 +142,7 @@ export const calibrateAdcSensors = (
                 h_100_max: h_100_max_cal,
             }
             writeData(configData)
+            socket.emit('calibrationMessage', 'Done')
             resolve({ h_0_min_cal, h_100_max_cal })
         })
 

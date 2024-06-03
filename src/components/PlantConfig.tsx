@@ -18,7 +18,7 @@ import { useSocket } from '@/context/sockets'
 import { useData } from '@/context/data'
 import { FcCheckmark } from 'react-icons/fc'
 import { Data, PinKey, Plant, SoilLabelList } from '../../types/sensor'
-import { useShallow } from 'zustand/react/shallow'
+import { useCalibrateSoil } from '@/context/calibrateSoil'
 
 type Props = {
     plant: Data['plantConfig'][0]
@@ -32,10 +32,8 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
     )
     const [hasChanged, sethasChanged] = useState(false)
     const { setData } = useSocket()
-    const { data } = useData(
-        useShallow((state) => ({ data: state.data })),
-        () => false
-    )
+    const { data } = useData()
+    const { openCalibrateDialog } = useCalibrateSoil()
 
     const handleSensorChange = (
         value: SoilLabelList | PinKey | null | undefined,
@@ -171,6 +169,46 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
                     unit="soil"
                 />
             </div>
+
+            <div className="flex items-start gap-4 w-full justify-between">
+                <div className="flex items-center gap-0 basis-30">
+                    <Label className=" basis-14">Soil Calibration</Label>
+                </div>
+                <div className=" ml-auto flex flex-col gap-2">
+                    <Label className="  text-gray-400">
+                        MIN:{' '}
+                        {plant?.soilSensor &&
+                            data?.sensors.adcSensors[plant?.soilSensor!]
+                                ?.h_0_min}
+                    </Label>
+                    <Label className="  text-gray-400">
+                        MAX:{' '}
+                        {plant?.soilSensor &&
+                            data?.sensors.adcSensors[plant?.soilSensor!]
+                                ?.h_100_max}
+                    </Label>
+                </div>
+            </div>
+
+            <div className="flex w-full items-center justify-between ml-6">
+                <Button
+                    className={`mr-12 basis-32 ${
+                        !plantCopy.usehumiditySoil && 'text-gray-400'
+                    }`}
+                    disabled={!plantCopy.usehumiditySoil}
+                    onClick={() => {
+                        console.log(
+                            'plantCopy?.soilSensor :>> ',
+                            plantCopy?.soilSensor
+                        )
+                        plantCopy?.soilSensor &&
+                            openCalibrateDialog(true, plantCopy.soilSensor)
+                    }}
+                >
+                    Calibrate Soil Sensor
+                </Button>
+            </div>
+
             <div className="flex items-center gap-4 w-full justify-between">
                 <div className="flex items-center gap-0 basis-50">
                     <Label className=" basis-14">Pump Sensor</Label>
@@ -388,4 +426,4 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
     )
 }
 
-export default memo(PlantConfig)
+export default PlantConfig

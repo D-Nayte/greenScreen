@@ -6,8 +6,11 @@ import { config } from 'dotenv'
 import { handleEnvChange, initEnvSensor } from './sensor/envSensor'
 import { getConfigData, writeData } from './utils/readConfig'
 import { SECOND_IN_MS } from './utils/constant'
-import { Data } from './types/sensor'
-import { handleAdcMoistureChange } from './sensor/adcSensor'
+import { Data, SoilLabelList } from './types/sensor'
+import {
+    calibrateAdcSensors,
+    handleAdcMoistureChange,
+} from './sensor/adcSensor'
 import { enableRelaiPower, handleRelaiChanges } from './sensor/gipo'
 import { handleLightSensor } from './sensor/lightSensor'
 
@@ -21,12 +24,14 @@ export interface ServerToClientEvents {
     withAck: (d: string, callback: (e: number) => void) => void
     sendData: (data: Data) => void
     sendConfig: (data: Data) => void
+    calibrationMessage: (data: string) => void
 }
 
 export interface ClientToServerEvents {
     message: (data: string) => void
     getData: () => void
     setData: (data: Data) => void
+    calibrateMoisSensor: (sensor: SoilLabelList) => void
 }
 
 export interface InterServerEvents {
@@ -62,11 +67,11 @@ const readSensors = async () => {
         console.error(error)
     }
 
-    // try {
-    //     handleLightSensor(configData)
-    // } catch (error) {
-    //     console.error(error)
-    // }
+    try {
+        handleLightSensor(configData)
+    } catch (error) {
+        console.error(error)
+    }
 
     handleRelaiChanges(configData)
 
@@ -99,6 +104,13 @@ app.prepare().then(async () => {
         socket.on('getData', async () => {
             const data = await readSensors()
             io.emit('sendData', data)
+        })
+
+        socket.on('calibrateMoisSensor', async (sensor: SoilLabelList) => {
+            await calibrateAdcSensors(sensor, socket)
+            const newData = await readSensors()
+
+            io.emit('sendData', newData)
         })
     })
 
