@@ -61,7 +61,7 @@ export const readAdcData = (): Promise<ReadDat> => {
         const { plantConfig } = readData()
         const data = {
             sensor: plantConfig[0]?.soilSensor || 'E/01',
-            humidity: parseInt(plantConfig[0]?.humiditySoil || '20'),
+            humidity: parseInt(plantConfig[0]?.humiditySoil || '0'),
         }
         return Promise.resolve([data])
     }
@@ -165,7 +165,7 @@ export const handleAdcMoistureChange = async (
             const sensorConfig = adcSensors[sensor]
             let { activeToId } = sensorConfig
             let plantIndex = 0
-            const plants = configData.plantConfig
+            const plants = [...configData.plantConfig]
             let plant = plants.find((plant, index) => {
                 plantIndex = index
                 return plant.id === activeToId
@@ -185,11 +185,11 @@ export const handleAdcMoistureChange = async (
             const pumpIsDonePouring =
                 currentlyRunningPumps.find((p) => p.pumpSensor === sensor)
                     ?.runningTime === 0
-
             if (usePump) {
                 if (humityisLow && !waterOn) {
                     plants[plantIndex].waterOn = true
                     const timneToRun = (pourAmount / (throughput / 3600)) * 1000
+                    plants[plantIndex].timeLeftPouring = timneToRun
                     currentlyRunningPumps.push({
                         pumpSensor: sensor,
                         runningTime: timneToRun,
@@ -198,7 +198,6 @@ export const handleAdcMoistureChange = async (
                     })
                     shouldWriteData.change = true
                 }
-
                 if (pumpisRunning && !pumpIsDonePouring) {
                     const timeLEft =
                         currentlyRunningPumps.find(
@@ -225,6 +224,28 @@ export const handleAdcMoistureChange = async (
             plants[plantIndex] = {
                 ...plants[plantIndex],
                 humiditySoil: humidity.toString(),
+            }
+
+            const pumpNotInUse = !currentlyRunningPumps.find(
+                (p) => p.pumpSensor === sensor
+            )
+            const pumpNotInUseAndWaterOn =
+                pumpNotInUse && plants[plantIndex].waterOn
+
+            // //fallback is water is on put no pumpmps inside the array
+            if (pumpNotInUseAndWaterOn) {
+                console.info(
+                    '--------------------------------------------------'
+                )
+                console.info(
+                    'Pump not in use, but water is on! Fallback triggered!'
+                )
+                console.info(
+                    '--------------------------------------------------'
+                )
+                plants[plantIndex].waterOn = false
+                plants[plantIndex].timeLeftPouring = 0
+                shouldWriteData.change = true
             }
 
             configData.plantConfig = [...plants]

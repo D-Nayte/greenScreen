@@ -4,7 +4,11 @@ import http from 'http'
 import { Server } from 'socket.io'
 import { config } from 'dotenv'
 import { handleEnvChange, initEnvSensor } from './sensor/envSensor'
-import { getConfigData, writeData } from './utils/readConfig.js'
+import {
+    getConfigData,
+    serverIntervall,
+    writeData,
+} from './utils/readConfig.js'
 import { SECOND_IN_MS } from './utils/constant.js'
 import { Data, SoilLabelList } from './types/sensor.js'
 import {
@@ -43,8 +47,6 @@ export interface SocketData {
     age: number
 }
 
-export const serverIntervall = SECOND_IN_MS[3]
-
 const args = process.argv
 const dev = args[2] !== '--prod'
 const app = next({ dev })
@@ -78,11 +80,6 @@ const readSensors = async () => {
     return shouldWriteData.change ? writeData(configData) : configData
 }
 
-//activate sensor rotation
-setInterval(async () => {
-    await readSensors()
-}, serverIntervall)
-
 app.prepare().then(async () => {
     const server = express()
     const httpServer = http.createServer(server)
@@ -107,13 +104,13 @@ app.prepare().then(async () => {
         })
 
         socket.on('getData', async () => {
-            const data = await readSensors()
+            const data = getConfigData()
             io.emit('sendData', data)
         })
 
         socket.on('calibrateMoisSensor', async (sensor: SoilLabelList) => {
             await calibrateAdcSensors(sensor, socket)
-            const newData = await readSensors()
+            const newData = getConfigData()
 
             io.emit('sendData', newData)
         })
@@ -125,5 +122,10 @@ app.prepare().then(async () => {
 
     httpServer.listen(PORT, () => {
         console.info(`Server is running on http://localhost:${PORT}`)
+        // activate sensor rotation
+        setInterval(async () => {
+            console.info(`Starting sensor reading`)
+            await readSensors()
+        }, serverIntervall)
     })
 })

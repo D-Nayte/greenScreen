@@ -45,18 +45,20 @@ const PlantCard = ({ plant }: PlantCardProps) => {
                     <span className=" font-semibold ">Sensor:</span>
                     {usehumiditySoil ? ` ${plant.soilSensor}` : '-'}
                 </p>
-                {plant.waterOn && (
+                {plant.waterOn && plant.timeLeftPouring ? (
                     <p>
                         <span className=" font-semibold ">
                             Time left pouring:
                         </span>
                         {` ${
-                            plant.timeLeftPouring < 1
+                            plant.timeLeftPouring / 1000 < 60
                                 ? plant.timeLeftPouring / 1000 + ' sec'
-                                : plant.timeLeftPouring / 1000 / 60 + ' min'
+                                : Math.round(
+                                      plant.timeLeftPouring / 1000 / 60
+                                  ) + ' min'
                         } `}
                     </p>
-                )}
+                ) : null}
             </CardContent>
             <CardFooter className="basis-full p-0 mt-1 flex items-end justify-end ">
                 <div className="w-full flex justify-center ">
