@@ -4,7 +4,7 @@ import { pinList } from '../utils/constant'
 
 const isLinux = process.platform === 'linux'
 
-const enablePigpiod = async () => {
+export const enablePigpiod = async () => {
     return new Promise((resolve, reject) => {
         if (!isLinux)
             resolve(console.log('not on linux, skipping pigpiod check'))
@@ -28,9 +28,6 @@ const enablePigpiod = async () => {
 }
 
 export const enableRelaiPower = async () => {
-    await enablePigpiod()
-    console.log('PIGPOD ON!')
-
     if (!isLinux) return console.log('not on linux, mocking relai on')
     const pin = 26
 
@@ -142,5 +139,28 @@ export const handleRelaiChanges = (configData: Data) => {
 
         const senroKey = pinList[sensorLabel]
         plant.waterOn ? enableGpio(sensorLabel) : disableGpio(sensorLabel)
+    })
+}
+
+export const disableI2c = async () => {
+    return new Promise((resolve, _) => {
+        const commands = ['sudo rmmod i2c_bcm2708', 'sudo rmmod i2c_dev']
+        commands.forEach((command, index) => {
+            runCommand(command, () => {
+                if (index === commands.length - 1)
+                    return resolve(console.log('I2C Bus wurde deaktiviert'))
+            })
+        })
+    })
+}
+export const enableI2cBus = async () => {
+    return new Promise((resolve, _) => {
+        const commands = ['sudo modprobe i2c_bcm2708', 'sudo modprobe i2c_dev']
+        commands.forEach((command, index) => {
+            runCommand(command, () => {
+                if (index === commands.length - 1)
+                    return resolve(console.log('I2C Bus wurde aktualisiert'))
+            })
+        })
     })
 }

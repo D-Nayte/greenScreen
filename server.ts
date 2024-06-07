@@ -10,19 +10,25 @@ import {
     serverIntervall,
     writeData,
 } from './utils/readConfig.js'
-import { SECOND_IN_MS } from './utils/constant.js'
 import { Data, SoilLabelList } from './types/sensor.js'
 import {
     calibrateAdcSensors,
     handleAdcMoistureChange,
 } from './sensor/adcSensor'
-import { enableRelaiPower, handleRelaiChanges } from './sensor/gipo'
-import { handleLightSensor } from './sensor/lightSensor'
-import { read } from 'fs'
+import {
+    enableRelaiPower,
+    handleRelaiChanges,
+    disableI2c,
+    enableI2cBus,enablePigpiod
+} from './sensor/gipo'
 
+
+await disableI2c()
 config()
+
+await enablePigpiod()
+await enableI2cBus()
 await initEnvSensor()
-await enableRelaiPower()
 
 export interface ServerToClientEvents {
     noArg: () => void
@@ -131,8 +137,9 @@ app.prepare().then(async () => {
         return handle(req, res)
     })
 
-    httpServer.listen(PORT, () => {
+    httpServer.listen(PORT, async () => {
         console.info(`Server is running on http://localhost:${PORT}`)
+        await enableRelaiPower()
         // activate sensor rotation
         setInterval(async () => {
             await readSensors()
