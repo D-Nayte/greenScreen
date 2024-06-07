@@ -6,6 +6,7 @@ import { config } from 'dotenv'
 import { handleEnvChange, initEnvSensor } from './sensor/envSensor'
 import {
     getConfigData,
+    readData,
     serverIntervall,
     writeData,
 } from './utils/readConfig.js'
@@ -17,6 +18,7 @@ import {
 } from './sensor/adcSensor'
 import { enableRelaiPower, handleRelaiChanges } from './sensor/gipo'
 import { handleLightSensor } from './sensor/lightSensor'
+import { read } from 'fs'
 
 config()
 await initEnvSensor()
@@ -53,6 +55,8 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const PORT = process.env.WEBSOCKET_PORT || 3000
 
+let data: Data = readData()
+
 const readSensors = async () => {
     const shouldWriteData = { change: false }
     const configData = getConfigData()
@@ -76,6 +80,8 @@ const readSensors = async () => {
     // }
 
     handleRelaiChanges(configData)
+
+    data = configData
 
     return shouldWriteData.change ? writeData(configData) : configData
 }
@@ -104,7 +110,7 @@ app.prepare().then(async () => {
         })
 
         socket.on('getData', async () => {
-            const data = getConfigData()
+            // const data = getConfigData()
             io.emit('sendData', data)
         })
 
@@ -123,8 +129,10 @@ app.prepare().then(async () => {
     httpServer.listen(PORT, () => {
         console.info(`Server is running on http://localhost:${PORT}`)
         // activate sensor rotation
-        setInterval(async () => {
-            await readSensors()
-        }, serverIntervall)
+        setTimeout(async () => {
+            setInterval(async () => {
+                await readSensors()
+            }, serverIntervall)
+        }, 60000)
     })
 })
