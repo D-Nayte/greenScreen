@@ -13,7 +13,7 @@ const enablePigpiod = async () => {
                 console.info('pigpiod läuft bereits')
                 return
             } else {
-                console.info('pigpiod läuft nicht')
+                console.info('pigpiod wird gestartet')
 
                 exec('sudo pigpiod', (error, stdout, stderr) => {
                     if (error) {
