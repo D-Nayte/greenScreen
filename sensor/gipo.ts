@@ -4,24 +4,32 @@ import { pinList } from '../utils/constant'
 
 const isLinux = process.platform === 'linux'
 
-isLinux &&
-    exec('pgrep pigpiod', (error, stdout, stderr) => {
-        if (stdout) {
-            console.info('pigpiod läuft bereits')
-        } else {
-            console.info('pigpiod läuft nicht')
+const enablePigpiod = async () => {
+    if (!isLinux) return console.log('not on linux, skipping pigpiod check')
 
-            exec('sudo pigpiod', (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Fehler beim Starten von pigpiod: ${stderr}`)
-                    return
-                }
-                console.info('pigpiod gestartet')
-            })
-        }
-    })
+    isLinux &&
+        exec('pgrep pigpiod', (error, stdout, stderr) => {
+            if (stdout) {
+                console.info('pigpiod läuft bereits')
+                return
+            } else {
+                console.info('pigpiod läuft nicht')
+
+                exec('sudo pigpiod', (error, stdout, stderr) => {
+                    if (error) {
+                        throw new Error(
+                            `Fehler beim Starten von pigpiod: ${stderr}`
+                        )
+                    }
+                    return console.info('pigpiod gestartet')
+                })
+            }
+        })
+}
 
 export const enableRelaiPower = async () => {
+    await enablePigpiod()
+
     if (!isLinux) return console.log('not on linux, mocking relai on')
     const pin = 19
 
@@ -35,8 +43,8 @@ export const disableRelaiPower = async () => {
     const pin = 26
 
     runCommand(`pigs w ${pin} 1`, (_, err) => {
-        console.info(`GPIO wurde einsgeschaltet, Relai ist off`)
         if (err) throw new Error(`Error enabling Relai: ${err}`)
+        console.info(`GPIO wurde einsgeschaltet, Relai ist off`)
     })
 }
 
