@@ -85,7 +85,7 @@ const readSensors = async () => {
 
     handleRelaiChanges(configData)
 
-    data = configData
+    data = { ...configData }
 
     return shouldWriteData.change ? writeData(configData) : configData
 }
