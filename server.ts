@@ -22,7 +22,7 @@ import { read } from 'fs'
 
 config()
 await initEnvSensor()
-enableRelaiPower()
+await enableRelaiPower()
 
 export interface ServerToClientEvents {
     noArg: () => void

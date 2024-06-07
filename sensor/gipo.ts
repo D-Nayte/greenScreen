@@ -5,36 +5,39 @@ import { pinList } from '../utils/constant'
 const isLinux = process.platform === 'linux'
 
 const enablePigpiod = async () => {
-    if (!isLinux) return console.log('not on linux, skipping pigpiod check')
+    return new Promise((resolve, reject) => {
+        if (!isLinux)
+            resolve(console.log('not on linux, skipping pigpiod check'))
 
-    isLinux &&
-        exec('pgrep pigpiod', (error, stdout, stderr) => {
-            if (stdout) {
-                console.info('pigpiod läuft bereits')
-                return
-            } else {
-                console.info('pigpiod wird gestartet')
+        isLinux &&
+            exec('pgrep pigpiod', (error, stdout, stderr) => {
+                if (stdout) {
+                    resolve(console.info('pigpiod läuft bereits'))
+                } else {
+                    console.info('pigpiod wird gestartet')
 
-                exec('sudo pigpiod', (error, stdout, stderr) => {
-                    if (error) {
-                        throw new Error(
-                            `Fehler beim Starten von pigpiod: ${stderr}`
-                        )
-                    }
-                    return console.info('pigpiod gestartet')
-                })
-            }
-        })
+                    exec('sudo pigpiod', (error, stdout, stderr) => {
+                        if (error) {
+                            reject(`Fehler beim Starten von pigpiod: ${stderr}`)
+                        }
+                        resolve(console.info('pigpiod gestartet'))
+                    })
+                }
+            })
+    })
 }
 
 export const enableRelaiPower = async () => {
     await enablePigpiod()
+    console.log('PIGPOD ON!')
 
     if (!isLinux) return console.log('not on linux, mocking relai on')
-    const pin = 19
+    const pin = 26
 
-    runCommand(`pigs w ${pin} 0`, () => {
+    runCommand(`pigs w ${pin} 0`, (_, err) => {
+        if (err) throw new Error(`Error enabling Relai: ${err}`)
         console.info(`GPIO wurde ausgeschaltet, Relai ist on `)
+        return
     })
 }
 
