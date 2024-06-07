@@ -56,10 +56,14 @@ const handle = app.getRequestHandler()
 const PORT = process.env.WEBSOCKET_PORT || 3000
 
 let data: Data = readData()
+let newFromFrontend: Data | null = null
 
 const readSensors = async () => {
     const shouldWriteData = { change: false }
-    const configData = getConfigData()
+    // const configData = getConfigData()
+    const configData = newFromFrontend ? { ...newFromFrontend } : { ...data }
+
+    newFromFrontend && (newFromFrontend = null)
 
     try {
         await handleEnvChange(configData, shouldWriteData)
@@ -104,9 +108,10 @@ app.prepare().then(async () => {
         console.info('Client connected')
 
         socket.on('setData', (data: Data) => {
-            const newData = writeData(data)
+            // const newData = writeData(data)
+            newFromFrontend = data
 
-            io.emit('sendData', newData)
+            io.emit('sendData', newFromFrontend)
         })
 
         socket.on('getData', async () => {
