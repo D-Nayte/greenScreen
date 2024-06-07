@@ -65,20 +65,19 @@ export const handleEnvChange = async (
     generall.humidityAir.current = envData.humidity
     generall.pressure.current = envData.pressure
 
-    const tempAboveMax = envData.temperature > generall.temperature.max
-    const tempBelowMin = envData.temperature < generall.temperature.min
+    const fanIsActivated = generall.fan.active === true
+
     const tempInRange =
         envData.temperature >= generall.temperature.min &&
         envData.temperature <= generall.temperature.max
-    const fanisOff = generall.fan.current === 0
 
-    if (!tempInRange && generall.fan.active) {
-        const fanShouldBeActive = tempAboveMax && fanisOff
-        const fanShouldBeInactive = tempBelowMin && !fanisOff
+    const humidityInRange =
+        envData.humidity >= generall.humidityAir.min &&
+        envData.humidity <= generall.humidityAir.max
 
-        if (fanShouldBeActive || fanShouldBeInactive) {
-            shouldWriteData.change = true
-            generall.fan.current = fanShouldBeActive ? 1 : 0
-        }
-    }
+    const fanShouldBeACtive =
+        (!tempInRange || !humidityInRange) && fanIsActivated ? true : false
+
+    shouldWriteData.change = generall.fan.current !== fanShouldBeACtive
+    generall.fan.current = fanShouldBeACtive ? 1 : 0
 }

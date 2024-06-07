@@ -61,6 +61,15 @@ const ConfigTemplate = <T extends GenerellConfigKeys>({
         if (!dataCopy.generall) return
         setValue((prev) => ({ ...prev, [key]: temp }))
 
+        if (key === 'min' && value?.min && temp > value.max) {
+            setValue(() => ({ max: temp + 1, ['min']: temp }))
+            dataCopy.generall[unit]['max'] = temp + 1
+        }
+        if (key === 'max' && value?.max && temp < value.min) {
+            setValue(() => ({ min: temp - 1, ['max']: temp }))
+            dataCopy.generall[unit]['min'] = temp - 1
+        }
+
         dataCopy.generall[unit][key] = temp
 
         setData(dataCopy)
