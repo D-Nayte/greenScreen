@@ -134,10 +134,8 @@ app.prepare().then(async () => {
     httpServer.listen(PORT, () => {
         console.info(`Server is running on http://localhost:${PORT}`)
         // activate sensor rotation
-        setTimeout(async () => {
-            setInterval(async () => {
-                await readSensors()
-            }, serverIntervall)
-        }, 60000)
+        setInterval(async () => {
+            await readSensors()
+        }, serverIntervall)
     })
 })
