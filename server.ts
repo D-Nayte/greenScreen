@@ -4,9 +4,9 @@ import http from 'http'
 import { Server } from 'socket.io'
 import { config } from 'dotenv'
 import { handleEnvChange, initEnvSensor } from './sensor/envSensor'
-import { getConfigData, writeData } from './utils/readConfig'
-import { SECOND_IN_MS } from './utils/constant'
-import { Data, SoilLabelList } from './types/sensor'
+import { getConfigData, writeData } from './utils/readConfig.js'
+import { SECOND_IN_MS } from './utils/constant.js'
+import { Data, SoilLabelList } from './types/sensor.js'
 import {
     calibrateAdcSensors,
     handleAdcMoistureChange,
@@ -67,16 +67,21 @@ const readSensors = async () => {
         console.error(error)
     }
 
-    try {
-        handleLightSensor(configData)
-    } catch (error) {
-        console.error(error)
-    }
+    // try {
+    //     handleLightSensor(configData)
+    // } catch (error) {
+    //     console.error(error)
+    // }
 
     handleRelaiChanges(configData)
 
     return shouldWriteData.change ? writeData(configData) : configData
 }
+
+//activate sensor rotation
+setInterval(async () => {
+    await readSensors()
+}, serverIntervall)
 
 app.prepare().then(async () => {
     const server = express()
@@ -113,11 +118,6 @@ app.prepare().then(async () => {
             io.emit('sendData', newData)
         })
     })
-
-    //activate sensor rotation
-    setInterval(async () => {
-        await readSensors()
-    }, serverIntervall)
 
     server.all('*', (req, res) => {
         return handle(req, res)

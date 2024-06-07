@@ -73,12 +73,14 @@ export const enableGpio = async (pinKey: PinKey) => {
         return console.log(`nicht auf linux, mocking ${pinKey} eingeschaltet`)
 
     const isEnabled = await checkGpioStatus(pinKey)
-    if (isEnabled) return console.log(`${pinKey} ist bereits eingeschaltet`)
-    if (isEnabled === null) return console.log(`${pinKey} nicht angeschlossen!`)
+    if (isEnabled) return
+    // console.log(`${pinKey} ist bereits eingeschaltet`)
+    if (isEnabled === null) return
+    // console.log(`${pinKey} nicht angeschlossen!`)
 
     const pin = pinList[pinKey]
     runCommand(`pigs w ${pin} 1`, () => {
-        console.log(`${pinKey} wurde eingeschaltet`)
+        // console.log(`${pinKey} wurde eingeschaltet`)
     })
 }
 
@@ -88,12 +90,13 @@ export const disableGpio = async (pinKey: PinKey) => {
 
     const pin = pinList[pinKey]
     const isEnabled = await checkGpioStatus(pinKey)
-    if (isEnabled === false)
-        return console.log(`${pinKey} ist bereits ausgeschaltet`)
-    if (isEnabled === null) return console.log(`${pin} nicht angeschlossen!`)
+    if (isEnabled === false) return
+    //  console.log(`${pinKey} ist bereits ausgeschaltet`)
+    if (isEnabled === null) return
+    // console.log(`${pin} nicht angeschlossen!`)
 
     runCommand(`pigs w ${pin} 0`, () => {
-        console.log(`${pinKey} wurde ausgeschaltet`)
+        // console.log(`${pinKey} wurde ausgeschaltet`)
     })
 }
 

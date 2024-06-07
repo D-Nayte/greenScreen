@@ -128,7 +128,8 @@ export const calibrateAdcSensors = (
 
             if (!dataString.includes('Calibration Data: ')) {
                 socket.emit('calibrationMessage', dataString)
-                return console.log('data :>> ', dataString)
+                //  console.log('data :>> ', dataString)
+                return
             }
 
             const [_, calDataJSOn] = dataString.split('Calibration Data: ')
@@ -175,6 +176,7 @@ export const handleAdcMoistureChange = async (
                 throughput,
                 pourAmount,
                 timeLeftPouring,
+                usePump,
             } = plant
             const humityisLow = humidity < startPump
             const pumpisRunning = currentlyRunningPumps
@@ -184,36 +186,40 @@ export const handleAdcMoistureChange = async (
                 currentlyRunningPumps.find((p) => p.pumpSensor === sensor)
                     ?.runningTime === 0
 
-            if (humityisLow && !waterOn) {
-                plants[plantIndex].waterOn = true
-                const timneToRun = (pourAmount / (throughput / 3600)) * 1000
-                currentlyRunningPumps.push({
-                    pumpSensor: sensor,
-                    runningTime: timneToRun,
-                    throughput,
-                    pourAmount: pourAmount,
-                })
-                shouldWriteData.change = true
-            }
+            if (usePump) {
+                if (humityisLow && !waterOn) {
+                    plants[plantIndex].waterOn = true
+                    const timneToRun = (pourAmount / (throughput / 3600)) * 1000
+                    currentlyRunningPumps.push({
+                        pumpSensor: sensor,
+                        runningTime: timneToRun,
+                        throughput,
+                        pourAmount: pourAmount,
+                    })
+                    shouldWriteData.change = true
+                }
 
-            if (pumpisRunning && !pumpIsDonePouring) {
-                const timeLEft =
-                    currentlyRunningPumps.find((p) => p.pumpSensor === sensor)
-                        ?.runningTime || 0
-                plants[plantIndex].timeLeftPouring = timeLEft
+                if (pumpisRunning && !pumpIsDonePouring) {
+                    const timeLEft =
+                        currentlyRunningPumps.find(
+                            (p) => p.pumpSensor === sensor
+                        )?.runningTime || 0
+                    plants[plantIndex].timeLeftPouring = timeLEft
 
-                shouldWriteData.change = true
-            }
+                    shouldWriteData.change = true
+                }
 
-            if (pumpisRunning && pumpIsDonePouring) {
-                plants[plantIndex].waterOn = false
-                currentlyRunningPumps.splice(
-                    currentlyRunningPumps.findIndex(
-                        (p) => p.pumpSensor === sensor
-                    ),
-                    1
-                )
-                shouldWriteData.change = true
+                if (pumpisRunning && pumpIsDonePouring) {
+                    plants[plantIndex].waterOn = false
+                    plants[plantIndex].timeLeftPouring = 0
+                    currentlyRunningPumps.splice(
+                        currentlyRunningPumps.findIndex(
+                            (p) => p.pumpSensor === sensor
+                        ),
+                        1
+                    )
+                    shouldWriteData.change = true
+                }
             }
 
             plants[plantIndex] = {
