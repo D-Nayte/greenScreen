@@ -23,7 +23,7 @@ isLinux &&
 
 export const enableRelaiPower = async () => {
     if (!isLinux) return console.log('not on linux, mocking relai on')
-    const pin = 26
+    const pin = 19
 
     runCommand(`pigs w ${pin} 0`, () => {
         console.info(`GPIO wurde ausgeschaltet, Relai ist on `)
@@ -66,6 +66,7 @@ const runCommand = (
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Fehler beim Ausführen des Befehls: ${stderr}`)
+            callback('', stderr)
             return
         }
         if (callback) callback(stdout, stderr)

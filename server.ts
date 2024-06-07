@@ -124,7 +124,6 @@ app.prepare().then(async () => {
         console.info(`Server is running on http://localhost:${PORT}`)
         // activate sensor rotation
         setInterval(async () => {
-            console.info(`Starting sensor reading`)
             await readSensors()
         }, serverIntervall)
     })
