@@ -164,7 +164,19 @@ export const handleAdcMoistureChange = async (
         for (const { sensor, humidity } of adcData) {
             const sensorConfig = adcSensors[sensor]
             let { activeToId, active } = sensorConfig
+
             if (!active) continue
+
+            //check for active but unused sensores
+            const sensorInUse = configData.plantConfig.find(
+                (plant) => plant.id === activeToId
+            )
+            if (!sensorInUse) {
+                configData.sensors.adcSensors[sensor].active = false
+                shouldWriteData.change = true
+                continue
+            }
+
             let plantIndex = 0
             const plants = [...configData.plantConfig]
             let plant = plants.find((plant, index) => {

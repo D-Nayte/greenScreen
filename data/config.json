@@ -4,13 +4,13 @@
       "min": 11,
       "max": 34,
       "active": true,
-      "current": 26.58
+      "current": 23.01
     },
     "humidityAir": {
       "min": 7,
       "max": 33,
       "active": true,
-      "current": 64.16
+      "current": 69.5
     },
     "light": {
       "active": false,
@@ -34,7 +34,7 @@
       "soilName": "Composit light Mix",
       "name": "Paprika",
       "humiditySoil": "8",
-      "waterOn": true,
+      "waterOn": false,
       "usehumiditySoil": true,
       "soilSensor": "E/05",
       "usePump": true,
@@ -43,7 +43,7 @@
       "pumpSensor": "A/4",
       "startPump": 56,
       "stopPump": 67,
-      "timeLeftPouring": 12000
+      "timeLeftPouring": 0
     }
   ],
   "sensors": {
