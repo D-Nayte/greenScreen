@@ -34,8 +34,9 @@ export const disableRelaiPower = async () => {
     if (!isLinux) return console.log('not on linux, mocking relai off')
     const pin = 26
 
-    runCommand(`pigs w ${pin} 1`, () => {
+    runCommand(`pigs w ${pin} 1`, (_, err) => {
         console.info(`GPIO wurde einsgeschaltet, Relai ist off`)
+        if (err) throw new Error(`Error enabling Relai: ${err}`)
     })
 }
 
@@ -58,13 +59,16 @@ export const checkGpioStatus = (pinKey: PinKey) => {
 }
 
 // Funktion zum Ausführen von Shell-Befehlen
-const runCommand = (command: string, callback: (stdout: string) => void) => {
+const runCommand = (
+    command: string,
+    callback: (stdout: string, stderr: string) => void
+) => {
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Fehler beim Ausführen des Befehls: ${stderr}`)
             return
         }
-        if (callback) callback(stdout)
+        if (callback) callback(stdout, stderr)
     })
 }
 
