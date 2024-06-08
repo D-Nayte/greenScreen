@@ -13,6 +13,7 @@ import {
 import { Data, SoilLabelList } from './types/sensor.js'
 import {
     calibrateAdcSensors,
+    getCalibratetValues,
     handleAdcMoistureChange,
 } from './sensor/adcSensor'
 import {
@@ -92,6 +93,15 @@ const readSensors = async () => {
     // }
 
     handleRelaiChanges(configData)
+
+    //apply sensor calibartions
+    Object.entries(configData.sensors.adcSensors).forEach(([key, value]) => {
+        const calibratedData = getCalibratetValues(key as SoilLabelList)
+        configData.sensors.adcSensors[key as SoilLabelList] = {
+            ...value,
+            ...calibratedData,
+        }
+    })
 
     data = { ...configData }
 
