@@ -19,9 +19,9 @@ import {
     enableRelaiPower,
     handleRelaiChanges,
     disableI2c,
-    enableI2cBus,enablePigpiod
+    enableI2cBus,
+    enablePigpiod,
 } from './sensor/gipo'
-
 
 await disableI2c()
 config()
@@ -59,7 +59,7 @@ const args = process.argv
 const dev = args[2] !== '--prod'
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const PORT = process.env.WEBSOCKET_PORT || 3000
+const PORT = 3001
 
 let data: Data = readData()
 let newFromFrontend: Data | null = null
@@ -139,10 +139,14 @@ app.prepare().then(async () => {
 
     httpServer.listen(PORT, async () => {
         console.info(`Server is running on http://localhost:${PORT}`)
-        await enableRelaiPower()
-        // activate sensor rotation
-        setInterval(async () => {
-            await readSensors()
-        }, serverIntervall)
+
+        setTimeout(async () => {
+            await enableRelaiPower()
+
+            // activate sensor rotation
+            setInterval(async () => {
+                await readSensors()
+            }, serverIntervall)
+        }, 3000)
     })
 })

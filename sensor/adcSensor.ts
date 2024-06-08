@@ -169,7 +169,8 @@ export const handleAdcMoistureChange = async (
 
             //check for active but unused sensores
             const sensorInUse = configData.plantConfig.find(
-                (plant) => plant.id === activeToId
+                (plant) =>
+                    plant.id === activeToId && plant.soilSensor === sensor
             )
             if (!sensorInUse) {
                 configData.sensors.adcSensors[sensor].active = false
