@@ -40,7 +40,6 @@ export const initEnvSensor = async () => {
 }
 
 export const readEnvSensor = async (): Promise<EnvData> => {
-    if (hasError) console.error('Error during Init BME280 Sensor')
     try {
         const dataRaw = await bme280.readSensorData()
         const data = {
@@ -51,8 +50,11 @@ export const readEnvSensor = async (): Promise<EnvData> => {
         return data
     } catch (error) {
         console.error(`BME280 read error: ${error}`)
-        hasError = false
-        await initEnvSensor()
+        if (hasError) {
+            console.error('Trying to reinit the BME280 sensor...')
+            hasError = false
+            await initEnvSensor()
+        }
     }
 }
 
