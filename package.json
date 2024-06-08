@@ -9,7 +9,7 @@
         "build": "next build",
         "start:old": "next start",
         "start:app": "node --loader ts-node/esm --experimental-specifier-resolution=node --experimental-json-modules --no-warnings server.ts --prod",
-        "start": "npm run build && (npm run start:background&)",
+        "start": "npm run build && (npm run start:app&)",
         "lint": "next lint",
         "dev1": "concurrently \"npm run client:dev\" \"npm run server:dev\"",
         "py:venv": "python3 -m venv pythonVirtual",
