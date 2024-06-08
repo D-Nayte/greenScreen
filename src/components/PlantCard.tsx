@@ -52,7 +52,8 @@ const PlantCard = ({ plant }: PlantCardProps) => {
                         </span>
                         {` ${
                             plant.timeLeftPouring / 1000 < 60
-                                ? plant.timeLeftPouring / 1000 + ' sec'
+                                ? Math.round(plant.timeLeftPouring / 1000) +
+                                  ' sec'
                                 : Math.round(
                                       plant.timeLeftPouring / 1000 / 60
                                   ) + ' min'

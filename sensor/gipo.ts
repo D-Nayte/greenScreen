@@ -164,3 +164,10 @@ export const enableI2cBus = async () => {
         })
     })
 }
+export const wakeI2C = async () => {
+    return new Promise((resolve, _) => {
+        runCommand('sudo i2cdetect -y 1', () => {
+            return resolve(console.log('I2C Bus gewekt'))
+        })
+    })
+}

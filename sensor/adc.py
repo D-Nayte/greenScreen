@@ -98,9 +98,12 @@ file = open("data/config.json")
 config = json.loads(file.read())
 activeSensor = []
 adcsensors = config['sensors']['adcSensors']
+plantsConfig = config['plantConfig']
 
-for sensor in adcsensors:
-    isActive = adcsensors[sensor]["active"]
+for plant in plantsConfig:
+    isActive = plant["usehumiditySoil"]
+    sensor = plant["soilSensor"]
+   
 
     if isActive:
         h_0_min = adcsensors[sensor]["h_0_min"]

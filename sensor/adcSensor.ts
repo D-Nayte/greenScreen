@@ -76,6 +76,7 @@ export const readAdcData = (): Promise<ReadDat> => {
         })
 
         readProcess.stderr.on('data', (data) => {
+            console.error(`${data}`)
             reject()
         })
     })
@@ -159,31 +160,23 @@ export const handleAdcMoistureChange = async (
 ) => {
     try {
         const adcData = await readAdcData()
-        const adcSensors = configData.sensors.adcSensors
+        const activeSensorList = configData.plantConfig
+            .filter((p) => p.usehumiditySoil)
+            .map((plant) => plant.soilSensor)
 
-        for (const { sensor, humidity } of adcData) {
-            const sensorConfig = adcSensors[sensor]
-            let { activeToId, active } = sensorConfig
+        //disable others all adc Sensors
+        Object.entries(configData.sensors.adcSensors).forEach(([key]) => {
+            !activeSensorList.includes(key as SoilLabelList) &&
+                (configData.sensors.adcSensors[
+                    key as keyof typeof configData.sensors.adcSensors
+                ].active = false)
+        })
 
-            if (!active) continue
-
-            //check for active but unused sensores
-            const sensorInUse = configData.plantConfig.find(
-                (plant) =>
-                    plant.id === activeToId && plant.soilSensor === sensor
-            )
-            if (!sensorInUse) {
-                configData.sensors.adcSensors[sensor].active = false
-                shouldWriteData.change = true
-                continue
-            }
-
-            let plantIndex = 0
+        configData.plantConfig.forEach((plant, plantIndex) => {
+            const sensor = plant.soilSensor!
+            const humidity = adcData.find((d) => d.sensor === sensor)?.humidity!
             const plants = [...configData.plantConfig]
-            let plant = plants.find((plant, index) => {
-                plantIndex = index
-                return plant.id === activeToId
-            })!
+
             const {
                 startPump,
                 waterOn,
@@ -200,7 +193,7 @@ export const handleAdcMoistureChange = async (
                 currentlyRunningPumps.find((p) => p.pumpSensor === sensor)
                     ?.runningTime === 0
             if (usePump) {
-                if (humityisLow && !waterOn) {
+                if (humityisLow && (!waterOn || !timeLeftPouring)) {
                     plants[plantIndex].waterOn = true
                     const timneToRun = (pourAmount / (throughput / 3600)) * 1000
                     plants[plantIndex].timeLeftPouring = timneToRun
@@ -263,7 +256,7 @@ export const handleAdcMoistureChange = async (
             }
 
             configData.plantConfig = [...plants]
-        }
+        })
     } catch (error) {
         throw new Error(`Couldn't read adc data sensor, ${error}`)
     }

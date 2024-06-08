@@ -21,6 +21,7 @@ import {
     disableI2c,
     enableI2cBus,
     enablePigpiod,
+    wakeI2C,
 } from './sensor/gipo'
 
 await disableI2c()
@@ -29,6 +30,7 @@ config()
 await enablePigpiod()
 await enableI2cBus()
 await initEnvSensor()
+await wakeI2C()
 
 export interface ServerToClientEvents {
     noArg: () => void
@@ -147,6 +149,6 @@ app.prepare().then(async () => {
             setInterval(async () => {
                 await readSensors()
             }, serverIntervall)
-        }, 3000)
+        }, 5000)
     })
 })

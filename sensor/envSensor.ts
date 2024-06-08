@@ -51,6 +51,8 @@ export const readEnvSensor = async (): Promise<EnvData> => {
         return data
     } catch (error) {
         console.error(`BME280 read error: ${error}`)
+        hasError = false
+        await initEnvSensor()
     }
 }
 

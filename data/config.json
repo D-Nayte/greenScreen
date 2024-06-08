@@ -4,13 +4,13 @@
       "min": 11,
       "max": 34,
       "active": true,
-      "current": 25.91
+      "current": 22.15
     },
     "humidityAir": {
       "min": 7,
       "max": 33,
       "active": true,
-      "current": 67.02
+      "current": 49.01
     },
     "light": {
       "active": false,
@@ -25,7 +25,7 @@
       "min": 1000,
       "max": 1010,
       "active": true,
-      "current": 1013.25
+      "current": 989.13
     }
   },
   "plantConfig": [
@@ -54,7 +54,7 @@
         "h_0_min": 19707.133333333335,
         "h_100_max": 10668.4,
         "activeToId": 1,
-        "active": true
+        "active": false
       },
       "E/02": {
         "address": "0x49",
@@ -67,8 +67,8 @@
       "E/03": {
         "address": "0x49",
         "channel": "P3",
-        "h_0_min": 0,
-        "h_100_max": 0,
+        "h_0_min": 17834.166666666668,
+        "h_100_max": 17816.566666666666,
         "activeToId": 3,
         "active": false
       },
@@ -86,7 +86,7 @@
         "h_0_min": 19982.5,
         "h_100_max": 15776.033333333333,
         "activeToId": 1,
-        "active": true
+        "active": false
       },
       "E/06": {
         "address": "0x48",
