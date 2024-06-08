@@ -171,3 +171,12 @@ export const wakeI2C = async () => {
         })
     })
 }
+export const disbaleAllRelaisOnStart = async () => {
+    const relais = Object.keys(pinList) as PinKey[]
+    return new Promise((resolve, _) => {
+        relais.forEach((pin, index) => {
+            enableGpio(pin)
+            if (index === relais.length - 1) resolve('')
+        })
+    })
+}

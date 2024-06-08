@@ -23,6 +23,7 @@ import {
     enableI2cBus,
     enablePigpiod,
     wakeI2C,
+    disbaleAllRelaisOnStart,
 } from './sensor/gipo'
 
 await disableI2c()
@@ -30,6 +31,7 @@ config()
 
 await enablePigpiod()
 await enableI2cBus()
+await disbaleAllRelaisOnStart()
 await initEnvSensor()
 await wakeI2C()
 
