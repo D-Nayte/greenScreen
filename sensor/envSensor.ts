@@ -1,5 +1,4 @@
-// @ts-nocheck
-
+import { writeErrorLogFile } from '../logs/writeLogs'
 import { Data } from '../types/sensor'
 import { runCommand } from './gipo'
 
@@ -14,6 +13,7 @@ export type EnvData =
 let BME280
 
 if (process.platform === 'linux') {
+    //@ts-ignore
     const { default: BME280Class } = await import('bme280-sensor')
     BME280 = BME280Class
 } else {
@@ -53,7 +53,7 @@ export const initEnvSensor = async () => {
     } catch (error) {
         console.error('Error Initialising Enviroment Sensor', error)
         writeErrorLogFile(
-            ` Error Initialising Enviroment Sensor: ${data} ` +
+            ` Error Initialising Enviroment Sensor: ${error} ` +
                 new Date().toLocaleString()
         )
 
@@ -73,7 +73,7 @@ export const readEnvSensor = async (): Promise<EnvData> => {
     } catch (error) {
         console.error(`BME280 read error: ${error}`)
         writeErrorLogFile(
-            ` Error reading Enviroment Sensor: ${data} ` +
+            ` Error reading Enviroment Sensor: ${error} ` +
                 new Date().toLocaleString()
         )
 
@@ -109,6 +109,6 @@ export const handleEnvChange = async (
     const fanShouldBeACtive =
         (!tempInRange || !humidityInRange) && fanIsActivated ? true : false
 
-    shouldWriteData.change = generall.fan.current !== fanShouldBeACtive
+    shouldWriteData.change = !!generall.fan.current !== fanShouldBeACtive
     generall.fan.current = fanShouldBeACtive ? 1 : 0
 }
