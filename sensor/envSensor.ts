@@ -34,7 +34,12 @@ export const initEnvSensor = async () => {
         await bme280.init()
         bme280 = bme280
     } catch (error) {
-        console.error('Error Reading Enviroment Sensor', error)
+        console.error('Error Initialising Enviroment Sensor', error)
+        writeErrorLogFile(
+            ` Error Initialising Enviroment Sensor: ${data} ` +
+                new Date().toLocaleString()
+        )
+
         hasError = true
     }
 }
@@ -50,6 +55,11 @@ export const readEnvSensor = async (): Promise<EnvData> => {
         return data
     } catch (error) {
         console.error(`BME280 read error: ${error}`)
+        writeErrorLogFile(
+            ` Error reading Enviroment Sensor: ${data} ` +
+                new Date().toLocaleString()
+        )
+
         if (hasError) {
             console.error('Trying to reinit the BME280 sensor...')
             hasError = false

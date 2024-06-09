@@ -53,7 +53,9 @@ export const readAdcData = (): Promise<ReadDat> => {
 
         readProcess.stderr.on('data', (data) => {
             console.error(`${data}`)
-            writeErrorLogFile(`${data}` + new Date().toLocaleString())
+            writeErrorLogFile(
+                ` Error ADC data:${data} ` + new Date().toLocaleString()
+            )
             reject()
         })
     })
