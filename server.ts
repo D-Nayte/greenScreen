@@ -25,7 +25,7 @@ import {
     wakeI2C,
     disbaleAllRelaisOnStart,
 } from './sensor/gipo'
-import { logSystemInfo } from './logs/writeLogs'
+import { logSystemInfo, readLogs } from './logs/writeLogs'
 import { MINUTES_IN_MS } from './utils/constant'
 
 await disableI2c()
@@ -44,6 +44,7 @@ export interface ServerToClientEvents {
     sendData: (data: Data) => void
     sendConfig: (data: Data) => void
     calibrationMessage: (data: string) => void
+    sendLogs: (logs: string) => void
 }
 
 export interface ClientToServerEvents {
@@ -51,6 +52,7 @@ export interface ClientToServerEvents {
     getData: () => void
     setData: (data: Data) => void
     calibrateMoisSensor: (sensor: SoilLabelList) => void
+    getLogs: () => void
 }
 
 export interface InterServerEvents {
@@ -147,6 +149,11 @@ app.prepare().then(async () => {
 
             io.emit('sendData', newData)
         })
+
+        socket.on('getLogs', async () => {
+            const logs = readLogs()
+            socket.emit('sendLogs', logs)
+        })
     })
 
     server.all('*', (req, res) => {
@@ -166,7 +173,7 @@ app.prepare().then(async () => {
 
             // frequently log system info
             setInterval(async () => {
-                logSystemInfo()
+                logSystemInfo(io)
             }, MINUTES_IN_MS[3])
         }, 5000)
     })

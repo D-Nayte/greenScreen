@@ -4,11 +4,18 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 
+import {
+    ClientToServerEvents,
+    InterServerEvents,
+    ServerToClientEvents,
+    SocketData,
+} from '../server'
+import { Server } from 'socket.io'
+
 // ESM spezifische Implementierung für __dirname
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
-const logDir = path.join(__dirname, 'logs')
-const logPath = path.join(logDir, 'system_logs.txt')
+const logPath = path.join(__dirname, 'system_logs.txt')
 
 // Funktion zum Ausführen von Shell-Befehlen und Rückgabe der Ausgabe
 const runCommand = (command: string): Promise<string> => {
@@ -44,7 +51,14 @@ const formatForHumanReading = (logs: object) => {
         .join('')
 }
 
-export const logSystemInfo = async () => {
+export const logSystemInfo = async (
+    io: Server<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        SocketData
+    >
+) => {
     const logs = {
         journalctl: '',
         dmesg: '',
@@ -73,11 +87,24 @@ export const logSystemInfo = async () => {
         const formattedLogs = formatForHumanReading(logs)
 
         // Logs in Datei speichern
-        //   const logPath = path.join(__dirname, 'system_logs.txt');
         fs.writeFileSync(logPath, formattedLogs)
 
         console.log(`Logs have been saved to ${logPath}`)
     } catch (error) {
         console.error('Error logging system info:', error)
+    } finally {
+        io.emit('sendLogs', formatForHumanReading(logs))
     }
+}
+
+export const readLogs = () => {
+    let currLogs = 'No Logs Found'
+    try {
+        const logs = fs.readFileSync(logPath, 'utf-8')
+
+        currLogs = logs
+    } catch (error) {
+        console.error('Error reading logs:', error)
+    }
+    return currLogs
 }
