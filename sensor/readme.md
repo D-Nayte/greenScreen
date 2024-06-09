@@ -3,6 +3,7 @@
 gpio=X: Bezieht sich auf den GPIO-Pin mit der Nummer X.
 op: Steht für "Output", was bedeutet, dass der GPIO-Pin als Ausgang konfiguriert ist.
 dl: Steht für "Drive Low", was bedeutet, dass der GPIO-Pin im Ausgangszustand auf LOW (0V) gesetzt ist.
+dh: Steht für "Drive High", was bedeutet, dass der GPIO-Pin im Ausgangszustand auf HIGH (3.3V) gesetzt ist.
 
 ```bash
 sudo nano /boot/firmware/config.txt
@@ -20,7 +21,7 @@ Add the following line to the end of the file:
 gpio=4=op,dl
 ```
 
-- press Ctrl+O to save the file , Enter to confirm the file name and Ctrl+X to exit the editor.
+-   press Ctrl+O to save the file , Enter to confirm the file name and Ctrl+X to exit the editor.
 
 <!-- if needed -->
 

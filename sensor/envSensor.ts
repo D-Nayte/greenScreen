@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import { Data } from '../types/sensor'
+import { runCommand } from './gipo'
 
 export type EnvData =
     | {
@@ -29,8 +30,24 @@ const options = {
 let bme280 = new BME280(options)
 let hasError: boolean = false
 
+export const powerEnvSensor = async (status: 'enable' | 'disable') => {
+    const onOrOff = status === 'enable' ? 1 : 0
+    return new Promise((resolve, reject) => {
+        //switch gpio 19 to High to enbale power for the env sensor
+        runCommand(`pigs w 19 ${onOrOff}`, (_, err) => {
+            if (err) {
+                reject(`Error enabling Relai: ${err}`)
+            }
+            resolve(`GPIO wurde ausgeschaltet, Relai ist on `)
+            return
+        })
+    })
+}
+
 export const initEnvSensor = async () => {
     try {
+        await powerEnvSensor('disable')
+        await powerEnvSensor('enable')
         await bme280.init()
         bme280 = bme280
     } catch (error) {
@@ -63,8 +80,8 @@ export const readEnvSensor = async (): Promise<EnvData> => {
         if (hasError) {
             console.error('Trying to reinit the BME280 sensor...')
             hasError = false
-            await initEnvSensor()
         }
+        await initEnvSensor()
     }
 }
 

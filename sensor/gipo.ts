@@ -67,7 +67,7 @@ export const checkGpioStatus = (pinKey: PinKey) => {
 }
 
 // Funktion zum Ausführen von Shell-Befehlen
-const runCommand = (
+export const runCommand = (
     command: string,
     callback: (stdout: string, stderr: string) => void
 ) => {

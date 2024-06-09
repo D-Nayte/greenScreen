@@ -28,13 +28,12 @@ import {
 import { logSystemInfo } from './logs/writeLogs'
 import { MINUTES_IN_MS } from './utils/constant'
 
-await disableI2c()
 config()
 
+await disableI2c()
 await enablePigpiod()
 await enableI2cBus()
 await disbaleAllRelaisOnStart()
-await initEnvSensor()
 await wakeI2C()
 
 export interface ServerToClientEvents {
@@ -165,6 +164,7 @@ app.prepare().then(async () => {
 
         setTimeout(async () => {
             await enableRelaiPower()
+            await initEnvSensor()
 
             // activate sensor rotation
             setInterval(async () => {
