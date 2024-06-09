@@ -43,3 +43,4 @@ dist/
 /data/config.json
 
 *system_logs.txt
+*error_logs.txt

@@ -10,6 +10,7 @@ import {
     SocketData,
 } from '../server'
 import MockChildProcess from './mockCalibration'
+import { writeErrorLogFile } from '../logs/writeLogs'
 
 type CalData = {
     h_0_min_cal: number
@@ -52,6 +53,7 @@ export const readAdcData = (): Promise<ReadDat> => {
 
         readProcess.stderr.on('data', (data) => {
             console.error(`${data}`)
+            writeErrorLogFile(`${data}` + new Date().toLocaleString())
             reject()
         })
     })

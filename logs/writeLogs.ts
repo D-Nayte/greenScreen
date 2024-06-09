@@ -16,6 +16,7 @@ import { Server } from 'socket.io'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const logPath = path.join(__dirname, 'system_logs.txt')
+const errorLogPath = path.join(__dirname, 'error_logs.txt')
 
 // Funktion zum Ausführen von Shell-Befehlen und Rückgabe der Ausgabe
 const runCommand = (command: string): Promise<string> => {
@@ -49,6 +50,16 @@ const formatForHumanReading = (logs: object) => {
             return `--- ${key.toUpperCase()} ---\n${value}\n\n`
         })
         .join('')
+}
+
+export const writeErrorLogFile = (error: string) => {
+    //checik if the file exists, if not create it
+    if (!fs.existsSync(errorLogPath)) {
+        fs.writeFileSync(errorLogPath, '')
+    }
+
+    fs.appendFileSync(errorLogPath, error)
+    console.log(`Error has been saved to ${errorLogPath}`)
 }
 
 export const logSystemInfo = async (readOnly?: boolean) => {

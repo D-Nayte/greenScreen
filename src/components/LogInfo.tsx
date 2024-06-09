@@ -5,8 +5,6 @@ const LogInfo = () => {
     const { getLogs, socket } = useSocket()
     const [logs, setLogs] = useState('')
 
-    console.log('logs :>> ', logs)
-
     useEffect(() => {
         socket.on('sendLogs', (logs: string) => {
             setLogs(logs)
