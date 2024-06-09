@@ -1,5 +1,4 @@
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process'
-import config from '../data/config.json' assert { type: 'json' }
 import { Data, SoilLabelList } from '../types/sensor'
 import { readData, writeData } from '../utils/readConfig'
 import { SECOND_IN_MS } from '../utils/constant'
@@ -30,31 +29,7 @@ const py = 'pythonVirtual/bin/python3'
 const isLinux = process.platform === 'linux'
 const currentlyRunningPumps: RunningPumps[] = []
 const pumpReadIntervall = SECOND_IN_MS[5]
-
-// const readProcess = spawn(py, [folderPath]);
-
-// readProcess.stdout.on("data", (data) => {
-//   console.log(`stdout: ${data}`);
-// });
-
-// readProcess.stderr.on("data", (data) => {
-//   console.error(`stderr: ${data}`);
-// });
-
-// readProcess.on("close", (code) => {
-//   console.log(`child process exited with code ${code}`);
-// });
-
-// // check if the readProcess is running, if not start it
-// if (readProcess.killed) {
-//   readProcess = spawn("pythonVirtual/bin/python3");
-// }
-
-// setInterval(() => {
-//   if (readProcess.killed) {
-//     readProcess = spawn("pythonVirtual/bin/python3");
-//   }
-// } , 1000);
+const config = readData() as Data
 
 export const readAdcData = (): Promise<ReadDat> => {
     if (!isLinux) {

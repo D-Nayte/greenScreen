@@ -1,10 +1,21 @@
 import fs from 'fs'
 import { SECOND_IN_MS } from './constant'
 import { Data } from '../types/sensor'
+import * as path from 'path'
 
-export const readData = (init?: string) => {
-    const path = init ? './data/initConfig.json' : './data/config.json'
-    const data = fs.readFileSync('./data/config.json', 'utf8')
+export const readData = () => {
+    let data = ''
+    const dir = './data'
+    const file = 'config.json'
+    const initFile = 'initConfig.json'
+
+    try {
+        data = fs.readFileSync(path.join(dir, file), 'utf8')
+    } catch (error) {
+        data = fs.readFileSync(path.join(dir, initFile), 'utf8')
+        fs.writeFileSync(path.join(dir, file), data, 'utf8')
+    }
+
     return JSON.parse(data) as Data
 }
 
