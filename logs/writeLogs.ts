@@ -64,6 +64,7 @@ export const logSystemInfo = async (
         dmesg: '',
         free: '',
         top: '',
+        temp: '',
     }
 
     try {
@@ -82,6 +83,9 @@ export const logSystemInfo = async (
         // CPU und Speicherlast
         const topLogs = await runCommand('top -bn1 | head -n 20')
         logs.top = topLogs
+
+        const temp = await runCommand('vcgencmd measure_temp')
+        logs.temp = temp
 
         // Logs in lesbarem Format formatieren
         const formattedLogs = formatForHumanReading(logs)
