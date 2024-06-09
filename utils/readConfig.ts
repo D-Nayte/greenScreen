@@ -1,8 +1,9 @@
 import fs from 'fs'
-import { MINUTES_IN_MS, SECOND_IN_MS } from './constant'
+import { SECOND_IN_MS } from './constant'
 import { Data } from '../types/sensor'
 
-export const readData = () => {
+export const readData = (init?: string) => {
+    const path = init ? './data/initConfig.json' : './data/config.json'
     const data = fs.readFileSync('./data/config.json', 'utf8')
     return JSON.parse(data) as Data
 }

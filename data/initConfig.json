@@ -1,16 +1,16 @@
 {
     "generall": {
         "temperature": {
-            "min": 11,
-            "max": 34,
+            "min": 6,
+            "max": 40,
             "active": true,
-            "current": 22.15
+            "current": 33.73
         },
         "humidityAir": {
             "min": 7,
-            "max": 33,
+            "max": 65,
             "active": true,
-            "current": 49.01
+            "current": 43
         },
         "light": {
             "active": false,
@@ -18,32 +18,32 @@
         },
         "fan": {
             "active": true,
-            "current": 1,
+            "current": 0,
             "sensor": "A/7"
         },
         "pressure": {
             "min": 1000,
             "max": 1010,
             "active": true,
-            "current": 989.13
+            "current": 987.34
         }
     },
     "plantConfig": [
         {
             "id": 1,
             "soilName": "Composit light Mix",
-            "name": "Paprika",
-            "humiditySoil": "8",
-            "waterOn": true,
+            "name": "Wedding Vake 2",
+            "humiditySoil": "42.3",
+            "waterOn": false,
             "usehumiditySoil": true,
             "soilSensor": "E/05",
             "usePump": true,
             "throughput": 600,
-            "pourAmount": 5,
+            "pourAmount": 1,
             "pumpSensor": "A/4",
-            "startPump": 56,
-            "stopPump": 67,
-            "timeLeftPouring": 18000
+            "startPump": 31,
+            "stopPump": 73,
+            "timeLeftPouring": 0
         }
     ],
     "sensors": {

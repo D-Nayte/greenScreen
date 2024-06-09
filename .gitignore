@@ -39,3 +39,5 @@ next-env.d.ts
 pythonVirtual/
 
 dist/
+
+/data/config.json

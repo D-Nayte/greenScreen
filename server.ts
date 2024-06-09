@@ -66,7 +66,7 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const PORT = 3001
 
-let data: Data = readData()
+let data: Data = readData('init')
 let newFromFrontend: Data | null = null
 
 const readSensors = async () => {
