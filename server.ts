@@ -66,7 +66,7 @@ const args = process.argv
 const dev = args[2] !== '--prod'
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const PORT = 3001
+const PORT = 3000
 
 let data: Data = readData()
 let newFromFrontend: Data | null = null
