@@ -159,7 +159,8 @@ export const handleAdcMoistureChange = async (
 
         configData.plantConfig.forEach((plant, plantIndex) => {
             const sensor = plant.soilSensor!
-            const humidity = adcData.find((d) => d.sensor === sensor)?.humidity!
+            const humidity =
+                adcData.find((d) => d.sensor === sensor)?.humidity || 0
             const plants = [...configData.plantConfig]
 
             const {

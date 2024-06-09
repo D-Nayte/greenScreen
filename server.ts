@@ -131,7 +131,7 @@ app.prepare().then(async () => {
         console.info('Client connected')
 
         socket.on('setData', (data: Data) => {
-            // const newData = writeData(data)
+            writeData(data)
             newFromFrontend = data
 
             io.emit('sendData', newFromFrontend)
