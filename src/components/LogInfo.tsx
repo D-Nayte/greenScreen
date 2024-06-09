@@ -8,13 +8,17 @@ const LogInfo = () => {
     console.log('logs :>> ', logs)
 
     useEffect(() => {
-        getLogs()
         socket.on('sendLogs', (logs: string) => {
             setLogs(logs)
         })
 
+        const inertvallId = setInterval(() => {
+            getLogs()
+        }, 1000)
+
         return () => {
             socket.off('sendLogs')
+            clearInterval(inertvallId)
         }
 
         // eslint-disable-next-line

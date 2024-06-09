@@ -51,20 +51,14 @@ const formatForHumanReading = (logs: object) => {
         .join('')
 }
 
-export const logSystemInfo = async (
-    io: Server<
-        ClientToServerEvents,
-        ServerToClientEvents,
-        InterServerEvents,
-        SocketData
-    >
-) => {
+export const logSystemInfo = async (readOnly?: boolean) => {
     const logs = {
         journalctl: '',
         dmesg: '',
         free: '',
         top: '',
         temp: '',
+        date: '',
     }
 
     try {
@@ -87,28 +81,19 @@ export const logSystemInfo = async (
         const temp = await runCommand('vcgencmd measure_temp')
         logs.temp = temp
 
+        logs.date = new Date().toLocaleString()
+
         // Logs in lesbarem Format formatieren
         const formattedLogs = formatForHumanReading(logs)
 
         // Logs in Datei speichern
-        fs.writeFileSync(logPath, formattedLogs)
+        if (!readOnly) {
+            fs.writeFileSync(logPath, formattedLogs)
+            console.log(`Logs have been saved to ${logPath}`)
+        }
 
-        console.log(`Logs have been saved to ${logPath}`)
+        return formattedLogs
     } catch (error) {
         console.error('Error logging system info:', error)
-    } finally {
-        io.emit('sendLogs', formatForHumanReading(logs))
     }
-}
-
-export const readLogs = () => {
-    let currLogs = 'No Logs Found'
-    try {
-        const logs = fs.readFileSync(logPath, 'utf-8')
-
-        currLogs = logs
-    } catch (error) {
-        console.error('Error reading logs:', error)
-    }
-    return currLogs
 }

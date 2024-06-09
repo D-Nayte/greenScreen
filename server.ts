@@ -25,7 +25,7 @@ import {
     wakeI2C,
     disbaleAllRelaisOnStart,
 } from './sensor/gipo'
-import { logSystemInfo, readLogs } from './logs/writeLogs'
+import { logSystemInfo } from './logs/writeLogs'
 import { MINUTES_IN_MS } from './utils/constant'
 
 await disableI2c()
@@ -151,8 +151,8 @@ app.prepare().then(async () => {
         })
 
         socket.on('getLogs', async () => {
-            const logs = readLogs()
-            socket.emit('sendLogs', logs)
+            const logs = await logSystemInfo()
+            socket.emit('sendLogs', logs || 'No logs found')
         })
     })
 
@@ -173,7 +173,7 @@ app.prepare().then(async () => {
 
             // frequently log system info
             setInterval(async () => {
-                logSystemInfo(io)
+                await logSystemInfo()
             }, MINUTES_IN_MS[3])
         }, 5000)
     })
