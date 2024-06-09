@@ -41,3 +41,5 @@ pythonVirtual/
 dist/
 
 /data/config.json
+
+system_logs.json

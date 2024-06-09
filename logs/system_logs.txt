@@ -1,0 +1,43 @@
+--- JOURNALCTL ---
+Jun 09 09:28:22 greenScreenPi packagekitd[2066]: pk_package_set_update_severity: assertion 'update_severity == PK_INFO_ENUM_UNKNOWN || update_severity == PK_INFO_ENUM_LOW || update_severity == PK_INFO_ENUM_NORMAL || update_severity == PK_INFO_ENUM_IMPORTANT || update_severity == PK_INFO_ENUM_CRITICAL' failed
+Jun 09 09:28:22 greenScreenPi packagekitd[2066]: pk_package_set_update_severity: assertion 'update_severity == PK_INFO_ENUM_UNKNOWN || update_severity == PK_INFO_ENUM_LOW || update_severity == PK_INFO_ENUM_NORMAL || update_severity == PK_INFO_ENUM_IMPORTANT || update_severity == PK_INFO_ENUM_CRITICAL' failed
+Jun 09 09:28:22 greenScreenPi packagekitd[2066]: pk_package_set_update_severity: assertion 'update_severity == PK_INFO_ENUM_UNKNOWN || update_severity == PK_INFO_ENUM_LOW || update_severity == PK_INFO_ENUM_NORMAL || update_severity == PK_INFO_ENUM_IMPORTANT || update_severity == PK_INFO_ENUM_CRITICAL' failed
+Jun 09 09:28:22 greenScreenPi packagekitd[2066]: pk_package_set_update_severity: assertion 'update_severity == PK_INFO_ENUM_UNKNOWN || update_severity == PK_INFO_ENUM_LOW || update_severity == PK_INFO_ENUM_NORMAL || update_severity == PK_INFO_ENUM_IMPORTANT || update_severity == PK_INFO_ENUM_CRITICAL' failed
+Jun 09 09:28:22 greenScreenPi packagekitd[2066]: pk_package_set_update_severity: assertion 'update_severity == PK_INFO_ENUM_UNKNOWN || update_severity == PK_INFO_ENUM_LOW || update_severity == PK_INFO_ENUM_NORMAL || update_severity == PK_INFO_ENUM_IMPORTANT || update_severity == PK_INFO_ENUM_CRITICAL' failed
+Jun 09 09:28:22 greenScreenPi packagekitd[2066]: pk_package_set_update_severity: assertion 'update_severity == PK_INFO_ENUM_UNKNOWN || update_severity == PK_INFO_ENUM_LOW || update_severity == PK_INFO_ENUM_NORMAL || update_severity == PK_INFO_ENUM_IMPORTANT || update_severity == PK_INFO_ENUM_CRITICAL' failed
+Jun 09 09:28:22 greenScreenPi packagekitd[2066]: pk_package_set_update_severity: assertion 'update_severity == PK_INFO_ENUM_UNKNOWN || update_severity == PK_INFO_ENUM_LOW || update_severity == PK_INFO_ENUM_NORMAL || update_severity == PK_INFO_ENUM_IMPORTANT || update_severity == PK_INFO_ENUM_CRITICAL' failed
+Jun 09 09:28:22 greenScreenPi packagekitd[2066]: pk_package_set_update_severity: assertion 'update_severity == PK_INFO_ENUM_UNKNOWN || update_severity == PK_INFO_ENUM_LOW || update_severity == PK_INFO_ENUM_NORMAL || update_severity == PK_INFO_ENUM_IMPORTANT || update_severity == PK_INFO_ENUM_CRITICAL' failed
+Jun 09 09:28:22 greenScreenPi packagekitd[2066]: pk_package_set_update_severity: assertion 'update_severity == PK_INFO_ENUM_UNKNOWN || update_severity == PK_INFO_ENUM_LOW || update_severity == PK_INFO_ENUM_NORMAL || update_severity == PK_INFO_ENUM_IMPORTANT || update_severity == PK_INFO_ENUM_CRITICAL' failed
+
+--- DMESG ---
+
+
+--- FREE ---
+               total        used        free      shared  buff/cache   available
+Mem:           3.7Gi       1.7Gi       1.1Gi        16Mi       971Mi       2.0Gi
+Swap:           99Mi          0B        99Mi
+
+
+--- TOP ---
+top - 09:44:39 up 17 min,  2 users,  load average: 0.03, 0.11, 0.15
+Tasks: 235 total,   1 running, 234 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :   3792.1 total,   1168.1 free,   1744.4 used,    971.7 buff/cache     
+MiB Swap:    100.0 total,    100.0 free,      0.0 used.   2047.7 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+     80 root       0 -20       0      0      0 I   6.2   0.0   0:01.92 kworker+
+   1931 AndyS     20   0   10.1g 499312  48384 S   6.2  12.9   1:11.42 node
+      1 root      20   0  168660  11452   8436 S   0.0   0.3   0:02.38 systemd
+      2 root      20   0       0      0      0 S   0.0   0.0   0:00.01 kthreadd
+      3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
+      4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      5 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      6 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      7 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      8 root      20   0       0      0      0 I   0.0   0.0   0:00.31 kworker+
+     11 root      20   0       0      0      0 I   0.0   0.0   0:00.05 kworker+
+     12 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+     13 root      20   0       0      0      0 I   0.0   0.0   0:00.00 rcu_tas+
+
+

@@ -25,6 +25,8 @@ import {
     wakeI2C,
     disbaleAllRelaisOnStart,
 } from './sensor/gipo'
+import { logSystemInfo } from './logs/writeLogs'
+import { MINUTES_IN_MS } from './utils/constant'
 
 await disableI2c()
 config()
@@ -161,6 +163,11 @@ app.prepare().then(async () => {
             setInterval(async () => {
                 await readSensors()
             }, serverIntervall)
+
+            // frequently log system info
+            setInterval(async () => {
+                logSystemInfo()
+            }, MINUTES_IN_MS[3])
         }, 5000)
     })
 })
