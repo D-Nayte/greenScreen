@@ -27,11 +27,18 @@ parser = argparse.ArgumentParser()
 # Create the I2C bus
 i2c = busio.I2C(board.SCL, board.SDA)
 
-# Create the ADC object using the I2C bus
-ads = ADS.ADS1115(i2c, address=0x48)
+def map_value(x, in_min, in_max, out_min, out_max):
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-# Create single-ended input on channel 0
-chan = AnalogIn(ads, ADS.P0)
+def get_soil_moisture(raw_value,DRY_VALUE,WET_VALUE):
+    # Map the raw value to a percentage
+    moisture_percentage = map_value(raw_value, DRY_VALUE, WET_VALUE, 0, 100)
+    # Clamp the values between 0 and 100
+    moisture_percentage = max(0, min(100, moisture_percentage))
+    rounded_hum = round(moisture_percentage, 1)
+    return rounded_hum
+
+
 
 def calibrateLow(chan):
     global h_0_min_cal
@@ -128,8 +135,9 @@ for sensor in activeSensor:
     chan = AnalogIn(ads, getattr(ADS, sensor["channel"]))
     h_0_min_cal = sensor["h_0_min"]
     h_100_max_cal = sensor["h_100_max"]
-    hum = 100 - (100 / (h_0_min_cal - h_100_max_cal) * (chan.value - h_100_max_cal))
-    rounded_hum = round(hum, 1)
-    sensorData.append({"sensor": sensor["label"], "humidity": rounded_hum})
+    # hum = 100 - (100 / (h_0_min_cal - h_100_max_cal) * (chan.value - h_100_max_cal))
+    # rounded_hum = round(hum, 1)
+    humidity = get_soil_moisture(chan.value,h_0_min_cal,h_100_max_cal )
+    sensorData.append({"sensor": sensor["label"], "humidity": humidity})
 print(sensorData)
 
