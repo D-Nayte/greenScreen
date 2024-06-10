@@ -23,17 +23,6 @@
             "@/*": ["./src/*"]
         }
     },
-    "include": [
-        "next-env.d.ts",
-        "**/*.ts",
-        "**/*.tsx",
-        ".next/types/**/*.ts",
-        "src/server.mts",
-        "src/context/sockets.mts",
-        "sensor/indexCopy.js",
-        "sensor/copy.js",
-        "sensor/gipoCopy.js",
-        "sensor/adcSensor.ts"
-    ],
+    "include": ["**/*", ".next/types/**/*.ts", "**/*.json", "**.css"],
     "exclude": ["node_modules"]
 }

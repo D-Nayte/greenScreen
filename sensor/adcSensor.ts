@@ -1,16 +1,16 @@
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process'
-import { Data, SoilLabelList } from '../types/sensor'
-import { readData, writeData } from '../utils/readConfig'
-import { SECOND_IN_MS } from '../utils/constant'
+import { Data, SoilLabelList } from '../types/sensor.js'
+import { readData, writeData } from '../utils/readConfig.js'
+import { SECOND_IN_MS } from '../utils/constant.js'
 import { Socket } from 'socket.io'
 import {
     ClientToServerEvents,
     InterServerEvents,
     ServerToClientEvents,
     SocketData,
-} from '../server'
-import MockChildProcess from './mockCalibration'
-import { writeErrorLogFile } from '../logs/writeLogs'
+} from '../server.js'
+import MockChildProcess from './mockCalibration.js'
+import { writeErrorLogFile } from '../logs/writeLogs.js'
 
 type CalData = {
     h_0_min_cal: number

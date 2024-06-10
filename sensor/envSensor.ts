@@ -1,6 +1,6 @@
-import { writeErrorLogFile } from '../logs/writeLogs'
-import { Data } from '../types/sensor'
-import { runCommand } from './gipo'
+import { writeErrorLogFile } from '../logs/writeLogs.js'
+import { Data } from '../types/sensor.js'
+import { runCommand } from './gipo.js'
 
 export type EnvData =
     | {
@@ -17,7 +17,7 @@ if (process.platform === 'linux') {
     const { default: BME280Class } = await import('bme280-sensor')
     BME280 = BME280Class
 } else {
-    const { MockBME280 } = await import('./mockBME280')
+    const { MockBME280 } = await import('./mockBME280.js')
     BME280 = MockBME280
 }
 

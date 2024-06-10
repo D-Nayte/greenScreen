@@ -1,6 +1,6 @@
 import { exec } from 'child_process'
-import { Data, PinKey } from '../types/sensor'
-import { pinList } from '../utils/constant'
+import { Data, PinKey } from '../types/sensor.js'
+import { pinList } from '../utils/constant.js'
 
 const isLinux = process.platform === 'linux'
 

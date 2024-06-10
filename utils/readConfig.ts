@@ -1,6 +1,6 @@
 import fs from 'fs'
-import { SECOND_IN_MS } from './constant'
-import { Data } from '../types/sensor'
+import { SECOND_IN_MS } from './constant.js'
+import { Data } from '../types/sensor.js'
 import * as path from 'path'
 
 export const readData = () => {

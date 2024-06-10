@@ -3,7 +3,7 @@ import next from 'next'
 import http from 'http'
 import { Server } from 'socket.io'
 import { config } from 'dotenv'
-import { handleEnvChange, initEnvSensor } from './sensor/envSensor'
+import { handleEnvChange, initEnvSensor } from './sensor/envSensor.js'
 import {
     getConfigData,
     readData,
@@ -15,7 +15,7 @@ import {
     calibrateAdcSensors,
     getCalibratetValues,
     handleAdcMoistureChange,
-} from './sensor/adcSensor'
+} from './sensor/adcSensor.js'
 import {
     enableRelaiPower,
     handleRelaiChanges,
@@ -24,9 +24,9 @@ import {
     enablePigpiod,
     wakeI2C,
     disbaleAllRelaisOnStart,
-} from './sensor/gipo'
-import { logSystemInfo } from './logs/writeLogs'
-import { MINUTES_IN_MS } from './utils/constant'
+} from './sensor/gipo.js'
+import { logSystemInfo } from './logs/writeLogs.js'
+import { MINUTES_IN_MS } from './utils/constant.js'
 
 config()
 
