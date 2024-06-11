@@ -27,6 +27,7 @@ import {
 } from './sensor/gipo.js'
 import { logSystemInfo } from './logs/writeLogs.js'
 import { MINUTES_IN_MS } from './utils/constant.js'
+import { spawn } from 'child_process'
 
 config()
 
@@ -44,6 +45,7 @@ export interface ServerToClientEvents {
     sendConfig: (data: Data) => void
     calibrationMessage: (data: string) => void
     sendLogs: (logs: string) => void
+    sendVideoStream: (data: Buffer) => void
 }
 
 export interface ClientToServerEvents {
@@ -52,6 +54,7 @@ export interface ClientToServerEvents {
     setData: (data: Data) => void
     calibrateMoisSensor: (sensor: SoilLabelList) => void
     getLogs: () => void
+    getVideoStream: () => void
 }
 
 export interface InterServerEvents {
@@ -147,6 +150,29 @@ app.prepare().then(async () => {
             const newData = getConfigData()
 
             io.emit('sendData', newData)
+        })
+
+        socket.on('getVideoStream', async () => {
+            const ffmpeg = spawn('ffmpeg', [
+                '-f',
+                'v4l2',
+                '-i',
+                '/dev/video0',
+                '-c:v',
+                'libx264',
+                '-preset',
+                'ultrafast',
+                '-f',
+                'mpegts',
+                'pipe:1',
+            ])
+            ffmpeg.stdout.on('data', (data: Buffer) => {
+                console.log('data :>> ', data)
+                socket.emit('sendVideoStream', data)
+            })
+            socket.on('disconnect', () => {
+                ffmpeg.kill()
+            })
         })
 
         socket.on('getLogs', async () => {
