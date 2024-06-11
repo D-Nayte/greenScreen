@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "nodemon server.ts --dev",
         "prebuild": "node scripts/removeOldDist.js && tsc && npm run files:copy",
-        "build": "cd dist && next build",
+        "build": "next build",
         "start:appOld": "node --loader ts-node/esm --experimental-specifier-resolution=node --experimental-json-modules --no-warnings server.ts --prod",
         "start:old": "npm run build && (npm run start:app&)",
         "start:app": "node ./dist/server.js --prod",

@@ -1,37 +1,52 @@
-import { useSocket } from '@/context/sockets'
+//@ts-nocheck
+'use client'
+
 import { useEffect, useRef } from 'react'
+import { useSocket } from '@/context/sockets'
+
+interface HTMLVideoElementWithMediaSource extends HTMLVideoElement {
+    mediaSource?: MediaSource
+}
 
 export default function VideoStream() {
-    const videoRef = useRef<HTMLVideoElement>(null)
+    const videoRef = useRef<HTMLCanvasElement>(null)
     const { socket } = useSocket()
 
     useEffect(() => {
         socket.emit('getVideoStream')
 
-        socket.on('sendVideoStream', (event) => {
-            console.log('event :>> ', event)
-            const video = videoRef.current
-            const blob = new Blob([event], { type: 'video/mp2t' })
-            const url = URL.createObjectURL(blob)
+        var canvas = videoRef.current
+        if (canvas) {
+            var context = canvas.getContext('2d')!
 
-            if (video) {
-                video.src = url
-                video?.play()
-            }
-        })
+            socket.on('sendVideoStream', function (data) {
+                var imageObj = new Image()
+                imageObj.src = 'data:image/jpeg;base64,' + data
+                imageObj.onload = function () {
+                    context.height = videoRef.current!.height
+                    context.width = videoRef.current!.width
+                    context.drawImage(
+                        imageObj,
+                        0,
+                        0,
+                        context.width,
+                        context.height
+                    )
+                }
+            })
+        }
 
         return () => {
             socket.off('sendVideoStream')
             socket.close()
         }
-
-        // eslint-disable-next-line
     }, [])
 
     return (
         <div>
             <h1>Live Stream</h1>
-            <video ref={videoRef} controls />
+            {/* <video ref={videoRef} controls autoPlay /> */}
+            <canvas id="canvas" ref={videoRef} className="w-full h-[600]" />
         </div>
     )
 }

@@ -27,7 +27,7 @@ import {
 } from './sensor/gipo.js'
 import { logSystemInfo } from './logs/writeLogs.js'
 import { MINUTES_IN_MS } from './utils/constant.js'
-import { spawn } from 'child_process'
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 
 config()
 
@@ -45,7 +45,7 @@ export interface ServerToClientEvents {
     sendConfig: (data: Data) => void
     calibrationMessage: (data: string) => void
     sendLogs: (logs: string) => void
-    sendVideoStream: (data: Buffer) => void
+    sendVideoStream: (data: String) => void
 }
 
 export interface ClientToServerEvents {
@@ -132,6 +132,7 @@ app.prepare().then(async () => {
 
     io.on('connection', (socket) => {
         console.info('Client connected')
+        let ffmpeg: ChildProcessWithoutNullStreams | null = null
 
         socket.on('setData', (data: Data) => {
             writeData(data)
@@ -153,25 +154,43 @@ app.prepare().then(async () => {
         })
 
         socket.on('getVideoStream', async () => {
-            const ffmpeg = spawn('ffmpeg', [
-                '-f',
-                'v4l2',
-                '-i',
-                '/dev/video0',
-                '-c:v',
-                'libx264',
-                '-preset',
-                'ultrafast',
-                '-f',
-                'mpegts',
-                'pipe:1',
-            ])
-            ffmpeg.stdout.on('data', (data: Buffer) => {
-                console.log('data :>> ', data)
-                socket.emit('sendVideoStream', data)
+            if (!ffmpeg) {
+                ffmpeg = spawn('ffmpeg', [
+                    '-i',
+                    '/dev/video0',
+                    '-vb',
+                    '5M',
+                    '-video_size',
+                    '1080x720',
+                    '-preset',
+                    'ultrafast',
+                    '-acodec',
+                    'copy',
+                    '-f',
+                    'mjpeg',
+                    'pipe:1',
+                    '-loglevel',
+                    'error',
+                ])
+            }
+
+            ffmpeg.stdout.on('data', (data) => {
+                const frame = Buffer.from(data).toString('base64')
+                io.emit('sendVideoStream', frame)
+            })
+
+            ffmpeg.stderr.on('data', (data) => {
+                console.error(`ffmpeg stderr: ${data}`)
+            })
+
+            ffmpeg.on('close', (code) => {
+                console.info(`ffmpeg process exited with code ${code}`)
             })
             socket.on('disconnect', () => {
-                ffmpeg.kill()
+                if (ffmpeg) {
+                    ffmpeg.kill('SIGINT')
+                    ffmpeg = null
+                }
             })
         })
 

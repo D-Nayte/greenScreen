@@ -9,6 +9,9 @@ try {
     app?.stdout?.on('data', (data) => {
         console.info(`${data}`)
     })
+    app?.stderr?.on('data', (data) => {
+        console.error(`${data}`)
+    })
 } catch (err) {
     console.error('Failed to start the frontend:', err)
     process.exit(1)
