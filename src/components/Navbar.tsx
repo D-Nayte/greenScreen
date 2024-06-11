@@ -22,12 +22,12 @@ const Navbar = ({ settabs }: NavbarProps) => {
                     >
                         Overview
                     </TabsTrigger>
-                    <TabsTrigger
+                    {/* <TabsTrigger
                         value="stream"
                         onClick={(val) => settabs('stream')}
                     >
                         Video Stream
-                    </TabsTrigger>
+                    </TabsTrigger> */}
                     <TabsTrigger
                         value="config"
                         onClick={(val) => settabs('config')}

@@ -26,7 +26,7 @@ const Content = ({ tabs }: ContentProps) => {
 
                 <TabsContent
                     value="stream"
-                    className={`${tabs === 'config' && 'flex flex-col h-full'}`}
+                    className={`${tabs === 'stream' && 'flex flex-col h-full'}`}
                 >
                     <VideoStream />
                 </TabsContent>

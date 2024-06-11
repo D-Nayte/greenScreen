@@ -153,46 +153,50 @@ app.prepare().then(async () => {
             io.emit('sendData', newData)
         })
 
-        socket.on('getVideoStream', async () => {
-            if (!ffmpeg) {
-                ffmpeg = spawn('ffmpeg', [
-                    '-i',
-                    '/dev/video0',
-                    '-vb',
-                    '5M',
-                    '-video_size',
-                    '1080x720',
-                    '-preset',
-                    'ultrafast',
-                    '-acodec',
-                    'copy',
-                    '-f',
-                    'mjpeg',
-                    'pipe:1',
-                    '-loglevel',
-                    'error',
-                ])
-            }
+        // socket.on('getVideoStream', async () => {
+        //     if (!ffmpeg) {
+        //         ffmpeg = spawn('ffmpeg', [
+        //             '-i',
+        //             '/dev/video0',
+        //             '-vb',
+        //             '1M',
+        //             '-b:v',
+        //             '1M',
+        //             '-video_size',
+        //             '1280x720',
+        //             '-crf',
+        //             '26',
+        //             '-preset',
+        //             'veryfast',
+        //             '-acodec',
+        //             'copy',
+        //             '-f',
+        //             'mjpeg',
+        //             'pipe:1',
+        //             '-loglevel',
+        //             'error',
+        //         ])
+        //     }
 
-            ffmpeg.stdout.on('data', (data) => {
-                const frame = Buffer.from(data).toString('base64')
-                io.emit('sendVideoStream', frame)
-            })
+        //     ffmpeg.stdout.on('data', (data) => {
+        //         const frame = Buffer.from(data).toString('base64')
+        //         io.emit('sendVideoStream', frame)
+        //     })
 
-            ffmpeg.stderr.on('data', (data) => {
-                console.error(`ffmpeg stderr: ${data}`)
-            })
+        //     ffmpeg.stderr.on('data', (data) => {
+        //         console.error(`ffmpeg stderr: ${data}`)
+        //     })
 
-            ffmpeg.on('close', (code) => {
-                console.info(`ffmpeg process exited with code ${code}`)
-            })
-            socket.on('disconnect', () => {
-                if (ffmpeg) {
-                    ffmpeg.kill('SIGINT')
-                    ffmpeg = null
-                }
-            })
-        })
+        //     ffmpeg.on('close', (code) => {
+        //         console.info(`ffmpeg process exited with code ${code}`)
+        //     })
+        //     socket.on('disconnect', () => {
+        //         if (ffmpeg) {
+        //             ffmpeg.kill('SIGINT')
+        //             ffmpeg = null
+        //         }
+        //     })
+        // })
 
         socket.on('getLogs', async () => {
             const logs = await logSystemInfo()

@@ -3,10 +3,6 @@
 import { useEffect, useRef } from 'react'
 import { useSocket } from '@/context/sockets'
 
-interface HTMLVideoElementWithMediaSource extends HTMLVideoElement {
-    mediaSource?: MediaSource
-}
-
 export default function VideoStream() {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const { socket } = useSocket()
@@ -22,11 +18,9 @@ export default function VideoStream() {
                 var imageObj = new Image()
                 imageObj.src = 'data:image/jpeg;base64,' + data
                 imageObj.onload = function () {
-                    const aspectRatio = imageObj.width / imageObj.height
-
                     // Set the canvas size based on the aspect ratio
-                    canvas!.width = window.innerWidth
-                    canvas!.height = window.innerWidth / aspectRatio
+                    canvas!.width = 1920
+                    canvas!.height = 1080
                     context.drawImage(
                         imageObj,
                         0,
