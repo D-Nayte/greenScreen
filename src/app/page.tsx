@@ -4,9 +4,9 @@ import { useState } from 'react'
 import Content from '@/components/Content'
 
 export default function Home() {
-    const [tabs, settabs] = useState<'overview' | 'config' | 'infos'>(
-        'overview'
-    )
+    const [tabs, settabs] = useState<
+        'overview' | 'config' | 'infos' | 'stream'
+    >('overview')
     return (
         <main className="flex flex-col w-full max-h-[100svh]">
             <Navbar settabs={settabs} />

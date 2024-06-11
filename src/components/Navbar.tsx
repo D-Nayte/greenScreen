@@ -2,7 +2,9 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 type NavbarProps = {
-    settabs: Dispatch<SetStateAction<'overview' | 'config' | 'infos'>>
+    settabs: Dispatch<
+        SetStateAction<'overview' | 'config' | 'infos' | 'stream'>
+    >
 }
 
 const Navbar = ({ settabs }: NavbarProps) => {
@@ -19,6 +21,12 @@ const Navbar = ({ settabs }: NavbarProps) => {
                         onClick={(val) => settabs('overview')}
                     >
                         Overview
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="stream"
+                        onClick={(val) => settabs('stream')}
+                    >
+                        Video Stream
                     </TabsTrigger>
                     <TabsTrigger
                         value="config"

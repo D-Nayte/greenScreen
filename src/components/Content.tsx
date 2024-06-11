@@ -4,9 +4,10 @@ import OverviewGenerell from './OverviewGenerell'
 import Plants from './Plants'
 import { memo } from 'react'
 import LogInfo from './LogInfo'
+import VideoStream from './VideoStream'
 
 type ContentProps = {
-    tabs: 'overview' | 'config' | 'infos'
+    tabs: 'overview' | 'config' | 'infos' | 'stream'
 }
 
 const Content = ({ tabs }: ContentProps) => {
@@ -21,6 +22,13 @@ const Content = ({ tabs }: ContentProps) => {
                 >
                     <OverviewGenerell />
                     <Plants />
+                </TabsContent>
+
+                <TabsContent
+                    value="stream"
+                    className={`${tabs === 'config' && 'flex flex-col h-full'}`}
+                >
+                    <VideoStream />
                 </TabsContent>
 
                 <TabsContent
