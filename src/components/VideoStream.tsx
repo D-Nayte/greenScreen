@@ -1,4 +1,3 @@
-//@ts-nocheck
 'use client'
 
 import { useEffect, useRef } from 'react'
@@ -9,13 +8,13 @@ interface HTMLVideoElementWithMediaSource extends HTMLVideoElement {
 }
 
 export default function VideoStream() {
-    const videoRef = useRef<HTMLCanvasElement>(null)
+    const canvasRef = useRef<HTMLCanvasElement>(null)
     const { socket } = useSocket()
 
     useEffect(() => {
         socket.emit('getVideoStream')
 
-        var canvas = videoRef.current
+        var canvas = canvasRef.current
         if (canvas) {
             var context = canvas.getContext('2d')!
 
@@ -23,14 +22,17 @@ export default function VideoStream() {
                 var imageObj = new Image()
                 imageObj.src = 'data:image/jpeg;base64,' + data
                 imageObj.onload = function () {
-                    context.height = videoRef.current!.height
-                    context.width = videoRef.current!.width
+                    const aspectRatio = imageObj.width / imageObj.height
+
+                    // Set the canvas size based on the aspect ratio
+                    canvas!.width = window.innerWidth
+                    canvas!.height = window.innerWidth / aspectRatio
                     context.drawImage(
                         imageObj,
                         0,
                         0,
-                        context.width,
-                        context.height
+                        canvas!.width,
+                        canvas!.height
                     )
                 }
             })
@@ -40,13 +42,14 @@ export default function VideoStream() {
             socket.off('sendVideoStream')
             socket.close()
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
         <div>
             <h1>Live Stream</h1>
-            {/* <video ref={videoRef} controls autoPlay /> */}
-            <canvas id="canvas" ref={videoRef} className="w-full h-[600]" />
+            <canvas id="canvas" ref={canvasRef} className="w-full h-[600]" />
         </div>
     )
 }
