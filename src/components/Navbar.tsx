@@ -47,6 +47,7 @@ const Navbar = ({ settabs }: NavbarProps) => {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
+            handleResize()
             window.addEventListener('resize', handleResize)
         }
 
