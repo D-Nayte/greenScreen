@@ -16,10 +16,11 @@ export const enablePigpiod = async () => {
                 } else {
                     console.info('pigpiod wird gestartet')
 
-                    exec('sudo pigpiod', (error, stdout, stderr) => {
+                    exec('sudo pigpiod -p 8887', (error, stdout, stderr) => {
                         if (error) {
                             reject(`Fehler beim Starten von pigpiod: ${stderr}`)
                         }
+                        exec('export PIGPIO_PORT=8887')
                         resolve(console.info('pigpiod gestartet'))
                     })
                 }
