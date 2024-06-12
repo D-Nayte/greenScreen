@@ -5,6 +5,7 @@ import Plants from './Plants'
 import { memo } from 'react'
 import LogInfo from './LogInfo'
 import VideoStream from './VideoStream'
+import VideoRTSP from './ui/VideoRTSP'
 
 type ContentProps = {
     tabs: 'overview' | 'config' | 'infos' | 'stream'
@@ -28,7 +29,7 @@ const Content = ({ tabs }: ContentProps) => {
                     value="stream"
                     className={`${tabs === 'stream' && 'flex flex-col h-full'}`}
                 >
-                    <VideoStream />
+                    <VideoRTSP />
                 </TabsContent>
 
                 <TabsContent

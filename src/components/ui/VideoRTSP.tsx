@@ -9,6 +9,7 @@ const VideoRTSP = () => {
         if (typeof window !== 'undefined') {
             const streamUrl = new URL(window.location.href)
             streamUrl.port = '8889'
+            streamUrl.pathname = '/MyStreamName'
             setUrl(streamUrl)
         }
     }, [])
