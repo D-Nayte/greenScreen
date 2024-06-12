@@ -4,7 +4,6 @@ import OverviewGenerell from './OverviewGenerell'
 import Plants from './Plants'
 import { memo } from 'react'
 import LogInfo from './LogInfo'
-import VideoStream from './VideoStream'
 import VideoRTSP from './ui/VideoRTSP'
 
 type ContentProps = {
