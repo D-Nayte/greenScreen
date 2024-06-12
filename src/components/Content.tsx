@@ -4,7 +4,7 @@ import OverviewGenerell from './OverviewGenerell'
 import Plants from './Plants'
 import { memo } from 'react'
 import LogInfo from './LogInfo'
-import VideoRTSP from './ui/VideoRTSP'
+import VideoRTSP from './VideoRTSP'
 
 type ContentProps = {
     tabs: 'overview' | 'config' | 'infos' | 'stream'
