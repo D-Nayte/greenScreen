@@ -16,11 +16,11 @@ export const enablePigpiod = async () => {
                 } else {
                     console.info('pigpiod wird gestartet')
 
+                    exec('export PIGPIO_PORT=8887')
                     exec('sudo pigpiod -p 8887', (error, stdout, stderr) => {
                         if (error) {
                             reject(`Fehler beim Starten von pigpiod: ${stderr}`)
                         }
-                        exec('export PIGPIO_PORT=8887')
                         resolve(console.info('pigpiod gestartet'))
                     })
                 }
@@ -32,7 +32,7 @@ export const enableRelaiPower = async () => {
     if (!isLinux) return console.log('not on linux, mocking relai on')
     const pin = 26
 
-    runCommand(`pigs w ${pin} 0`, (_, err) => {
+    runCommandPigs(`pigs w ${pin} 0`, (_, err) => {
         if (err) throw new Error(`Error enabling Relai: ${err}`)
         console.info(`GPIO wurde ausgeschaltet, Relai ist on `)
         return
@@ -43,7 +43,7 @@ export const disableRelaiPower = async () => {
     if (!isLinux) return console.log('not on linux, mocking relai off')
     const pin = 26
 
-    runCommand(`pigs w ${pin} 1`, (_, err) => {
+    runCommandPigs(`pigs w ${pin} 1`, (_, err) => {
         if (err) throw new Error(`Error enabling Relai: ${err}`)
         console.info(`GPIO wurde einsgeschaltet, Relai ist off`)
     })
@@ -82,6 +82,21 @@ export const runCommand = (
     })
 }
 
+export const runCommandPigs = (
+    command: string,
+    callback: (stdout: string, stderr: string) => void
+) => {
+    exec('export PIGPIO_PORT=8887')
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Fehler beim Ausführen des Befehls: ${stderr}`)
+            callback('', stderr)
+            return
+        }
+        if (callback) callback(stdout, stderr)
+    })
+}
+
 export const enableGpio = async (pinKey: PinKey) => {
     if (!isLinux)
         return console.log(`nicht auf linux, mocking ${pinKey} eingeschaltet`)
@@ -93,7 +108,7 @@ export const enableGpio = async (pinKey: PinKey) => {
     // console.log(`${pinKey} nicht angeschlossen!`)
 
     const pin = pinList[pinKey]
-    runCommand(`pigs w ${pin} 1`, () => {
+    runCommandPigs(`pigs w ${pin} 1`, () => {
         // console.log(`${pinKey} wurde eingeschaltet`)
     })
 }
@@ -109,7 +124,7 @@ export const disableGpio = async (pinKey: PinKey) => {
     if (isEnabled === null) return
     // console.log(`${pin} nicht angeschlossen!`)
 
-    runCommand(`pigs w ${pin} 0`, () => {
+    runCommandPigs(`pigs w ${pin} 0`, () => {
         // console.log(`${pinKey} wurde ausgeschaltet`)
     })
 }

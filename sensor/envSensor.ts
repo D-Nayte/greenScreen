@@ -1,6 +1,6 @@
 import { writeErrorLogFile } from '../logs/writeLogs.js'
 import { Data } from '../types/sensor.js'
-import { runCommand } from './gipo.js'
+import { runCommandPigs } from './gipo.js'
 
 export type EnvData =
     | {
@@ -34,7 +34,7 @@ export const powerEnvSensor = async (status: 'enable' | 'disable') => {
     const onOrOff = status === 'enable' ? 1 : 0
     return new Promise((resolve, reject) => {
         //switch gpio 19 to High to enbale power for the env sensor
-        runCommand(`pigs w 19 ${onOrOff}`, (_, err) => {
+        runCommandPigs(`pigs w 19 ${onOrOff}`, (_, err) => {
             if (err) {
                 reject(`Error enabling Relai: ${err}`)
             }
