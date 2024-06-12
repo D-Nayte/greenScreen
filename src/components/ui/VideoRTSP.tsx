@@ -1,21 +1,29 @@
-import axios from 'axios'
+'use client'
 
-const VideoRTSP = async () => {
-    const videoUrl = 'http://localhost:8889/MyStreamName/'
+import { useEffect, useState } from 'react'
 
-    try {
-        const res = await axios.get('/api/videoStream')
+const VideoRTSP = () => {
+    const [url, setUrl] = useState<URL | null>(null)
 
-        console.log('res :>> ', res)
-    } catch (error) {
-        console.log(error)
-    }
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const streamUrl = new URL(window.location.href)
+            streamUrl.port = '8889'
+            setUrl(streamUrl)
+        }
+    }, [])
 
     return (
-        <iframe
-            src={'/videoStream'}
-            style={{ width: '500px', height: '500px' }}
-        ></iframe>
+        <>
+            {url ? (
+                <iframe
+                    src={url.href}
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                ></iframe>
+            ) : null}
+        </>
     )
 }
 
