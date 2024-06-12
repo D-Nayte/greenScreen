@@ -48,7 +48,14 @@ export const readAdcData = (): Promise<ReadDat> => {
         readProcess.stdout.on('data', (data) => {
             const dataString = `${data}`
 
-            resolve(JSON.parse(dataString.replace(/'/g, '"')) as ReadDat)
+            if (dataString.startsWith('sensorData:'))
+                return resolve(
+                    JSON.parse(
+                        dataString.split('sensorData:')[1].replace(/'/g, '"')
+                    ) as ReadDat
+                )
+
+            // resolve(JSON.parse(dataString.replace(/'/g, '"')) as ReadDat)
         })
 
         readProcess.stderr.on('data', (data) => {
@@ -114,7 +121,6 @@ export const calibrateAdcSensors = (
 
             if (!dataString.includes('Calibration Data: ')) {
                 socket.emit('calibrationMessage', dataString)
-                //  console.log('data :>> ', dataString)
                 return
             }
 

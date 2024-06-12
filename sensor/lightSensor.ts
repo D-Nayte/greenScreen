@@ -8,7 +8,7 @@ if (isLinux) {
     i2c = await import('i2c-bus')
 } else {
     const { MockI2C } = await import('./mockI2c')
-    console.log('MockI2C :>> ', MockI2C)
+    console.info('MockI2C :>> ', MockI2C)
     i2c = new MockI2C()
 }
 
@@ -93,8 +93,6 @@ function _readLux() {
     } catch (error) {
         throw new Error(`Error in reading light sensor: ${error}`)
     }
-    // console.log(`Lux: ${lux}`);
-    //   }, 500);
 }
 
 export const handleLightSensor = (confiData: Data) => {

@@ -13,7 +13,7 @@ const removeOldDist = () => {
     const distPath = path.resolve(__dirname, '../dist')
     if (fs.existsSync(distPath)) {
         fs.rm(distPath, { recursive: true }, () => {
-            console.log('Old dist/ folder removed')
+            console.info('Old dist/ folder removed')
         })
     }
 }

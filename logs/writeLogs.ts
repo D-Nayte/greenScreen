@@ -59,7 +59,7 @@ export const writeErrorLogFile = (error: string) => {
     }
 
     fs.appendFileSync(errorLogPath, error)
-    console.log(`Error has been saved to ${errorLogPath}`)
+    console.info(`Error has been saved to ${errorLogPath}`)
 }
 
 export const logSystemInfo = async (readOnly?: boolean) => {
@@ -100,7 +100,7 @@ export const logSystemInfo = async (readOnly?: boolean) => {
         // Logs in Datei speichern
         if (!readOnly) {
             fs.writeFileSync(logPath, formattedLogs)
-            console.log(`Logs have been saved to ${logPath}`)
+            console.info(`Logs have been saved to ${logPath}`)
         }
 
         return formattedLogs

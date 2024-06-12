@@ -128,16 +128,13 @@ for plant in plantsConfig:
         }
         activeSensor.append(sensor)
 
-# while True:
 sensorData = []
 for sensor in activeSensor:
     ads = ADS.ADS1115(i2c, address=int(sensor["address"], 16))
     chan = AnalogIn(ads, getattr(ADS, sensor["channel"]))
     h_0_min_cal = sensor["h_0_min"]
     h_100_max_cal = sensor["h_100_max"]
-    # hum = 100 - (100 / (h_0_min_cal - h_100_max_cal) * (chan.value - h_100_max_cal))
-    # rounded_hum = round(hum, 1)
     humidity = get_soil_moisture(chan.value,h_0_min_cal,h_100_max_cal )
     sensorData.append({"sensor": sensor["label"], "humidity": humidity})
-print(sensorData)
+print("sensorData:",sensorData)
 

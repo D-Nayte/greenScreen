@@ -197,10 +197,6 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
                     }`}
                     disabled={!plantCopy.usehumiditySoil}
                     onClick={() => {
-                        console.log(
-                            'plantCopy?.soilSensor :>> ',
-                            plantCopy?.soilSensor
-                        )
                         plantCopy?.soilSensor &&
                             openCalibrateDialog(true, plantCopy.soilSensor)
                     }}

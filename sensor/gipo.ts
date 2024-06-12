@@ -7,7 +7,7 @@ const isLinux = process.platform === 'linux'
 export const enablePigpiod = async () => {
     return new Promise((resolve, reject) => {
         if (!isLinux)
-            resolve(console.log('not on linux, skipping pigpiod check'))
+            resolve(console.info('not on linux, skipping pigpiod check'))
 
         isLinux &&
             exec('pgrep pigpiod', (error, stdout, stderr) => {
@@ -16,7 +16,6 @@ export const enablePigpiod = async () => {
                 } else {
                     console.info('pigpiod wird gestartet')
 
-                    exec('export PIGPIO_PORT=8887')
                     exec('sudo pigpiod -p 8887', (error, stdout, stderr) => {
                         if (error) {
                             reject(`Fehler beim Starten von pigpiod: ${stderr}`)
@@ -29,7 +28,7 @@ export const enablePigpiod = async () => {
 }
 
 export const enableRelaiPower = async () => {
-    if (!isLinux) return console.log('not on linux, mocking relai on')
+    if (!isLinux) return console.info('not on linux, mocking relai on')
     const pin = 26
 
     runCommandPigs(`pigs w ${pin} 0`, (_, err) => {
@@ -40,7 +39,7 @@ export const enableRelaiPower = async () => {
 }
 
 export const disableRelaiPower = async () => {
-    if (!isLinux) return console.log('not on linux, mocking relai off')
+    if (!isLinux) return console.info('not on linux, mocking relai off')
     const pin = 26
 
     runCommandPigs(`pigs w ${pin} 1`, (_, err) => {
@@ -53,16 +52,24 @@ export const checkGpioStatus = (pinKey: PinKey) => {
     const pin = pinList[pinKey]
     const command = `pigs r ${pin}`
     return new Promise((resolve, reject) => {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                // console.error(`Fehler beim Abfragen des GPIO-Status: ${stderr}`);
-                resolve(null)
-            } else {
-                // 0 bedeutet LOW, 1 bedeutet HIGH
-                const status = parseInt(stdout.trim(), 10) === 1
+        // exec(command, (error, stdout, stderr) => {
+        //     if (error) {
+        //         // console.error(`Fehler beim Abfragen des GPIO-Status: ${stderr}`);
+        //         resolve(null)
+        //     } else {
+        //         // 0 bedeutet LOW, 1 bedeutet HIGH
+        //         const status = parseInt(stdout.trim(), 10) === 1
 
-                resolve(status)
+        //         resolve(status)
+        //     }
+        // })
+        runCommandPigs(command, (stdout, stderr) => {
+            if (stderr) {
+                console.error(`Fehler beim Abfragen des GPIO-Status: ${stderr}`)
+                reject(stderr)
             }
+            const status = parseInt(stdout.trim(), 10) === 1
+            resolve(status)
         })
     })
 }
@@ -86,8 +93,8 @@ export const runCommandPigs = (
     command: string,
     callback: (stdout: string, stderr: string) => void
 ) => {
-    exec('export PIGPIO_PORT=8887')
-    exec(command, (error, stdout, stderr) => {
+    const execCommand = `export PIGPIO_PORT=8887; ${command}`
+    exec(execCommand, (error, stdout, stderr) => {
         if (error) {
             console.error(`Fehler beim Ausführen des Befehls: ${stderr}`)
             callback('', stderr)
@@ -99,42 +106,42 @@ export const runCommandPigs = (
 
 export const enableGpio = async (pinKey: PinKey) => {
     if (!isLinux)
-        return console.log(`nicht auf linux, mocking ${pinKey} eingeschaltet`)
+        return console.info(`nicht auf linux, mocking ${pinKey} eingeschaltet`)
 
     const isEnabled = await checkGpioStatus(pinKey)
     if (isEnabled) return
-    // console.log(`${pinKey} ist bereits eingeschaltet`)
     if (isEnabled === null) return
-    // console.log(`${pinKey} nicht angeschlossen!`)
 
     const pin = pinList[pinKey]
-    runCommandPigs(`pigs w ${pin} 1`, () => {
-        // console.log(`${pinKey} wurde eingeschaltet`)
+    runCommandPigs(`pigs w ${pin} 1`, (_, error) => {
+        if (error) {
+            console.error(`Fehler beim Einschalten von ${pinKey}: ${error}`)
+        }
     })
 }
 
 export const disableGpio = async (pinKey: PinKey) => {
     if (!isLinux)
-        return console.log(`nicht auf linux, mocking ${pinKey} ausgeschaltet`)
+        return console.info(`nicht auf linux, mocking ${pinKey} ausgeschaltet`)
 
     const pin = pinList[pinKey]
     const isEnabled = await checkGpioStatus(pinKey)
     if (isEnabled === false) return
-    //  console.log(`${pinKey} ist bereits ausgeschaltet`)
     if (isEnabled === null) return
-    // console.log(`${pin} nicht angeschlossen!`)
 
-    runCommandPigs(`pigs w ${pin} 0`, () => {
-        // console.log(`${pinKey} wurde ausgeschaltet`)
+    runCommandPigs(`pigs w ${pin} 0`, (_, error) => {
+        if (error) {
+            console.error(`Fehler beim Ausschalten von ${pinKey}: ${error}`)
+        }
     })
 }
 
 export const handleRelaiChanges = (configData: Data) => {
     //  activate fan
     const fan = configData.generall.fan
-    fan.current && fan.active
-        ? enableGpio(fan.sensor!)
-        : disableGpio(fan.sensor!)
+    fan.current && fan.active && fan.sensor
+        ? enableGpio(fan.sensor)
+        : fan.sensor && disableGpio(fan.sensor)
 
     const plantsDisabledPump = configData.plantConfig.filter(
         (plant) => !plant.usePump && plant.pumpSensor
@@ -164,7 +171,7 @@ export const disableI2c = async () => {
         commands.forEach((command, index) => {
             runCommand(command, () => {
                 if (index === commands.length - 1)
-                    return resolve(console.log('I2C Bus wurde deaktiviert'))
+                    return resolve(console.info('I2C Bus wurde deaktiviert'))
             })
         })
     })
@@ -175,7 +182,7 @@ export const enableI2cBus = async () => {
         commands.forEach((command, index) => {
             runCommand(command, () => {
                 if (index === commands.length - 1)
-                    return resolve(console.log('I2C Bus wurde aktualisiert'))
+                    return resolve(console.info('I2C Bus wurde aktualisiert'))
             })
         })
     })
@@ -183,7 +190,7 @@ export const enableI2cBus = async () => {
 export const wakeI2C = async () => {
     return new Promise((resolve, _) => {
         runCommand('sudo i2cdetect -y 1', () => {
-            return resolve(console.log('I2C Bus gewekt'))
+            return resolve(console.info('I2C Bus gewekt'))
         })
     })
 }

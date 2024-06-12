@@ -1,9 +1,9 @@
 // mock the i2c class from the4 "i2c-bus" package
 
 export class MockI2C {
-  constructor() {}
+    constructor() {}
 
-  openSync(number: number) {
-    console.log(`Mocking ic2 buss number ${number}`);
-  }
+    openSync(number: number) {
+        console.info(`Mocking ic2 buss number ${number}`)
+    }
 }
