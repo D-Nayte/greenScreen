@@ -54,7 +54,8 @@
                 "h_0_min": 19707.133333333335,
                 "h_100_max": 10668.4,
                 "activeToId": 1,
-                "active": false
+                "active": false,
+                "calTemp": 0
             },
             "E/02": {
                 "address": "0x49",
@@ -62,7 +63,8 @@
                 "h_0_min": 19707.133333333335,
                 "h_100_max": 10668.4,
                 "activeToId": 2,
-                "active": false
+                "active": false,
+                "calTemp": 0
             },
             "E/03": {
                 "address": "0x49",
@@ -70,7 +72,8 @@
                 "h_0_min": 17834.166666666668,
                 "h_100_max": 17816.566666666666,
                 "activeToId": 3,
-                "active": false
+                "active": false,
+                "calTemp": 0
             },
             "E/04": {
                 "address": "0x48",
@@ -78,7 +81,8 @@
                 "h_0_min": 0,
                 "h_100_max": 0,
                 "activeToId": 4,
-                "active": false
+                "active": false,
+                "calTemp": 0
             },
             "E/05": {
                 "address": "0x48",
@@ -86,7 +90,8 @@
                 "h_0_min": 19917.5,
                 "h_100_max": 9634.666666666,
                 "activeToId": 1,
-                "active": false
+                "active": false,
+                "calTemp": 0
             },
             "E/06": {
                 "address": "0x48",
@@ -94,7 +99,8 @@
                 "h_0_min": 0,
                 "h_100_max": 0,
                 "activeToId": 6,
-                "active": false
+                "active": false,
+                "calTemp": 0
             }
         }
     }
