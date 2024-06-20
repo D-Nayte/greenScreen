@@ -187,6 +187,12 @@ const PlantConfig = ({ plant, id, noDelete = false }: Props) => {
                             data?.sensors.adcSensors[plant?.soilSensor!]
                                 ?.h_100_max}
                     </Label>
+                    <Label className="  text-gray-400">
+                        TEMP:{' '}
+                        {plant?.soilSensor &&
+                            data?.sensors.adcSensors[plant?.soilSensor!]
+                                ?.calTemp}
+                    </Label>
                 </div>
             </div>
 

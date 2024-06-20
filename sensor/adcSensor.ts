@@ -133,6 +133,7 @@ export const calibrateAdcSensors = (
                 ...configData.sensors.adcSensors[sensorLabel],
                 h_0_min: h_0_min_cal,
                 h_100_max: h_100_max_cal,
+                calTemp: configData.generall.temperature.current,
             }
             writeData(configData)
             socket.emit('calibrationMessage', 'Done')

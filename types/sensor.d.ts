@@ -71,6 +71,7 @@ export type Data = {
                 h_100_max: number
                 activeToId: number
                 active: boolean
+                calTemp: number
             }
             'E/02': {
                 address: string
@@ -79,6 +80,7 @@ export type Data = {
                 h_100_max: number
                 activeToId: number
                 active: boolean
+                calTemp: number
             }
             'E/03': {
                 address: string
@@ -87,6 +89,7 @@ export type Data = {
                 h_100_max: number
                 activeToId: number
                 active: boolean
+                calTemp: number
             }
             'E/04': {
                 address: string
@@ -95,6 +98,7 @@ export type Data = {
                 h_100_max: number
                 activeToId: number
                 active: boolean
+                calTemp: number
             }
             'E/05': {
                 address: string
@@ -103,6 +107,7 @@ export type Data = {
                 h_100_max: number
                 activeToId: number
                 active: boolean
+                calTemp: number
             }
             'E/06': {
                 address: string
@@ -111,6 +116,7 @@ export type Data = {
                 h_100_max: number
                 activeToId: number
                 active: boolean
+                calTemp: number
             }
         }
     }
