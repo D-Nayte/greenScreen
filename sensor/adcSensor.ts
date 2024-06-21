@@ -70,8 +70,8 @@ export const readAdcData = (): Promise<ReadDat> => {
 
 export const getCalibratetValues = (sensor: SoilLabelList) => {
     const data = readData()
-    const { h_0_min, h_100_max } = data.sensors.adcSensors[sensor]
-    return { h_0_min, h_100_max }
+    const { h_0_min, h_100_max, calTemp } = data.sensors.adcSensors[sensor]
+    return { h_0_min, h_100_max, calTemp }
 }
 
 export const calibrateAdcSensors = (
