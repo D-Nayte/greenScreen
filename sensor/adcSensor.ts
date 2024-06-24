@@ -32,7 +32,7 @@ const currentlyRunningPumps: RunningPumps[] = []
 const pumpReadIntervall = SECOND_IN_MS[5]
 const config = readData() as Data
 
-export const readAdcData = (): Promise<ReadDat> => {
+export const readAdcData = (temp?: number): Promise<ReadDat> => {
     if (!isLinux) {
         const { plantConfig } = readData()
         const data = {
@@ -151,7 +151,9 @@ export const handleAdcMoistureChange = async (
     shouldWriteData: { change: boolean }
 ) => {
     try {
-        const adcData = await readAdcData()
+        const temp = configData.generall.temperature.current
+        const adcData = await readAdcData(temp)
+
         const activeSensorList = configData.plantConfig
             .filter((p) => p.usehumiditySoil)
             .map((plant) => plant.soilSensor)
