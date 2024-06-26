@@ -147,7 +147,7 @@ app.prepare().then(async () => {
         })
 
         socket.on('calibrateMoisSensor', async (sensor: SoilLabelList) => {
-            await calibrateAdcSensors(sensor, socket)
+            await calibrateAdcSensors(sensor, socket, data)
             const newData = getConfigData()
 
             io.emit('sendData', newData)

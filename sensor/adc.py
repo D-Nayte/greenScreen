@@ -121,6 +121,7 @@ if len(args) > 1:
         calibrate(address, channel)
     if "-temp" in args:
         parser.add_argument("-temp")
+        args = parser.parse_args()
         temp = args.temp
 
 # Main sensor reading loop
@@ -158,8 +159,8 @@ for sensor in activeSensor:
     h_0_min_cal = sensor["h_0_min"]
     h_100_max_cal = sensor["h_100_max"]
     calTemp = sensor["calTemp"]
-    current_temp = float(temp) if temp is not None else calTemp  # Use current temp if provided, otherwise use calTemp
+    current_temp = float(temp) if temp is not None else 0  # Use current temp if provided, otherwise use calTemp
     humidity = get_soil_moisture(chan.value, h_0_min_cal, h_100_max_cal, current_temp, calTemp)
-    sensorData.append({"sensor": sensor["label"], "humidity": humidity})
+    sensorData.append({"sensor": sensor["label"], "humidity": humidity,"sensorValue":float(chan.value)})
 
 print("sensorData:", sensorData)

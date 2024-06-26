@@ -16,7 +16,11 @@ type CalData = {
     h_0_min_cal: number
     h_100_max_cal: number
 }
-type ReadDat = { sensor: SoilLabelList; humidity: number }[]
+type ReadDat = {
+    sensor: SoilLabelList
+    humidity: number
+    sensorValue: number
+}[]
 
 type RunningPumps = {
     pumpSensor: string
@@ -38,11 +42,14 @@ export const readAdcData = (temp?: number): Promise<ReadDat> => {
         const data = {
             sensor: plantConfig[0]?.soilSensor || 'E/01',
             humidity: parseInt(plantConfig[0]?.humiditySoil || '0'),
+            sensorValue: 1900,
         }
         return Promise.resolve([data])
     }
 
-    const readProcess = spawn(py, [folderPath])
+    const params = temp ? [folderPath, '-temp', temp.toString()] : [folderPath]
+
+    const readProcess = spawn(py, params)
 
     return new Promise((resolve, reject) => {
         readProcess.stdout.on('data', (data) => {
@@ -81,7 +88,8 @@ export const calibrateAdcSensors = (
         ServerToClientEvents,
         InterServerEvents,
         SocketData
-    >
+    >,
+    configData: Data
 ): Promise<CalData> => {
     const adcSensors = config.sensors.adcSensors
     const { address, channel } = adcSensors[sensorLabel]
@@ -128,7 +136,7 @@ export const calibrateAdcSensors = (
             const { h_0_min_cal, h_100_max_cal } = JSON.parse(
                 calDataJSOn
             ) as CalData
-            const configData = readData()
+
             configData.sensors.adcSensors[sensorLabel] = {
                 ...configData.sensors.adcSensors[sensorLabel],
                 h_0_min: h_0_min_cal,
