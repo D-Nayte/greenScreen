@@ -3,7 +3,7 @@ import next from 'next'
 import http from 'http'
 import { Server } from 'socket.io'
 import { config } from 'dotenv'
-import { handleEnvChange, initEnvSensor } from './sensor/envSensor.js'
+import { handleEnvChange } from './sensor/envSensor.js'
 import {
     getConfigData,
     readData,
@@ -213,7 +213,6 @@ app.prepare().then(async () => {
 
         setTimeout(async () => {
             await enableRelaiPower()
-            await initEnvSensor()
 
             // activate sensor rotation
             setInterval(async () => {
