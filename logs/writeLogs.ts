@@ -53,6 +53,20 @@ const formatForHumanReading = (logs: object) => {
 }
 
 export const writeErrorLogFile = (error: string) => {
+    const dateTime = new Date().toLocaleString()
+    const errorLogFile = `${dateTime}: ${error}\n`
+
+    //bvefore adding the error, check if the error is already in the file, if so, replace it wit the current date^
+    const errorLogContent = fs.readFileSync(errorLogPath, 'utf-8')
+    if (errorLogContent.includes(error)) {
+        const newErrorLogContent = errorLogContent.replace(
+            new RegExp(`${error}.*\n`),
+            errorLogFile
+        )
+        fs.writeFileSync(errorLogPath, newErrorLogContent)
+        return
+    }
+
     //checik if the file exists, if not create it
     if (!fs.existsSync(errorLogPath)) {
         fs.writeFileSync(errorLogPath, '')

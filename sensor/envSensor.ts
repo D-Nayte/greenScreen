@@ -15,23 +15,28 @@ export const readEnvSensor = async (): Promise<EnvData> => {
     return new Promise((resolve, reject) => {
         if (!isLinux) resolve({ temperature: 20, humidity: 50 })
 
-        exec('python sensor/env.py', (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Fehler beim lesen des Env sensors: ${stderr}`)
-                writeErrorLogFile(
-                    `Fehler beim lesen des Env sensors: ${stderr}`
-                )
-                reject()
-            }
+        exec(
+            './pythonVirtual/bin/python3 sensor/env.py',
+            (error, stdout, stderr) => {
+                if (error) {
+                    console.error(
+                        `Fehler beim lesen des Env sensors: ${stderr}`
+                    )
+                    writeErrorLogFile(
+                        `Fehler beim lesen des Env sensors: ${stderr}`
+                    )
+                    reject()
+                }
 
-            const data = JSON.parse(stdout)
-            const formatted = {
-                temperature: parseFloat(data?.temperature.toFixed(2)),
-                humidity: parseFloat(data?.humidity.toFixed(2)),
-            }
+                const data = JSON.parse(stdout)
+                const formatted = {
+                    temperature: parseFloat(data?.temperature.toFixed(2)),
+                    humidity: parseFloat(data?.humidity.toFixed(2)),
+                }
 
-            resolve(formatted)
-        })
+                resolve(formatted)
+            }
+        )
     })
 }
 
