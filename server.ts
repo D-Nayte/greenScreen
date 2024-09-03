@@ -23,7 +23,8 @@ import {
     enableI2cBus,
     enablePigpiod,
     wakeI2C,
-    disbaleAllRelaisOnStart,
+    switchAllRelaisOnStart,
+    disableRelaiPower,
 } from './sensor/gipo.js'
 import { logSystemInfo } from './logs/writeLogs.js'
 import { MINUTES_IN_MS } from './utils/constant.js'
@@ -31,10 +32,12 @@ import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 
 config()
 
+await disableRelaiPower()
 await disableI2c()
 await enablePigpiod()
 await enableI2cBus()
-await disbaleAllRelaisOnStart()
+await switchAllRelaisOnStart('enable')
+await switchAllRelaisOnStart('disable')
 await wakeI2C()
 
 export interface ServerToClientEvents {

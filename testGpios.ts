@@ -50,6 +50,22 @@ const validateArgs = (args: string[]) => {
     return true
 }
 
+export const checkGpioStatus = (pinKey: PinKey) => {
+    const pin = pinList[pinKey]
+    const command = `pigs r ${pin}`
+    return new Promise((resolve, reject) => {
+        runCommandPigs(command, (stdout, stderr) => {
+            if (stderr) {
+                console.error(`Fehler beim Abfragen des GPIO-Status: ${stderr}`)
+                reject(stderr)
+            }
+            const status = parseInt(stdout.trim(), 10) === 1
+            console.log('status', status)
+            resolve(status)
+        })
+    })
+}
+
 const runCommandPigs = (
     command: string,
     callback: (stdout: string, stderr: string) => void
@@ -74,6 +90,9 @@ const enableGpio = async (pinKey: PinKey) => {
             console.error(`Fehler beim Einschalten von ${pinKey}: ${error}`)
         }
     })
+
+    //check if pin is enabled
+    await checkGpioStatus(pinKey)
 }
 
 const disableGpio = async (pinKey: PinKey) => {
@@ -86,6 +105,8 @@ const disableGpio = async (pinKey: PinKey) => {
             console.error(`Fehler beim Ausschalten von ${pinKey}: ${error}`)
         }
     })
+
+    await checkGpioStatus(pinKey)
 }
 
 const isValid = validateArgs(args)

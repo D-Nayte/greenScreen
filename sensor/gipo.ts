@@ -196,12 +196,15 @@ export const wakeI2C = async () => {
         })
     })
 }
-export const disbaleAllRelaisOnStart = async () => {
+export const switchAllRelaisOnStart = async (enable: 'enable' | 'disable') => {
     const relais = Object.keys(pinList) as PinKey[]
-    return new Promise((resolve, _) => {
-        relais.forEach((pin, index) => {
-            disableGpio(pin)
-            if (index === relais.length - 1) resolve('')
-        })
+    const promiseList = relais.map(async (pin, index) => {
+        const time = 100 * index
+
+        return setTimeout(async () => {
+            enable ? await enableGpio(pin) : await disableGpio(pin)
+        }, time)
     })
+
+    return Promise.all(promiseList)
 }
