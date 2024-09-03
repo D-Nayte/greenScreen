@@ -1,3 +1,7 @@
+<!-- Test a GPIO -->
+
+npm run testGPIO -- enable A/2
+
 install python apckages
 
 <!-- example ADS11115 ADC -->
