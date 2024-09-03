@@ -79,28 +79,25 @@ const readSensors = async () => {
     const shouldWriteData = { change: false }
     // const configData = getConfigData()
     const configData = newFromFrontend ? { ...newFromFrontend } : { ...data }
+    let hasError = false
 
     newFromFrontend && (newFromFrontend = null)
 
     try {
         await handleEnvChange(configData, shouldWriteData)
     } catch (error) {
+        hasError = true
         console.error(error)
     }
 
     try {
         await handleAdcMoistureChange(configData, shouldWriteData)
     } catch (error) {
+        hasError = true
         console.error(error)
     }
 
-    // try {
-    //     handleLightSensor(configData)
-    // } catch (error) {
-    //     console.error(error)
-    // }
-
-    handleRelaiChanges(configData)
+    handleRelaiChanges(configData, hasError)
 
     //apply sensor calibartions
     Object.entries(configData.sensors.adcSensors).forEach(([key, value]) => {

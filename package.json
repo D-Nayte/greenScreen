@@ -14,14 +14,15 @@
         "start": "pm2 list && pm2 start ecosystem.config.cjs --env production",
         "files:copy": "node scripts/copyFiles.js",
         "py:venv": "python3 -m venv pythonVirtual",
-        "py:virtualStart":"source pythonVirtual/bin/activate",
-        "py:install" : " pythonVirtual/bin/pip3 install -r requirements.txt",
+        "py:virtualStart": "source pythonVirtual/bin/activate",
+        "py:install": " pythonVirtual/bin/pip3 install -r requirements.txt",
         "py:adc": "pythonVirtual/bin/python3 sensor/adc.py",
         "pm2:kill": "pm2 kill",
         "pm2:monit": "pm2 monit",
         "pm2:log": "pm2 log",
         "lint": "next lint",
-        "postinstall": "npm run py:venv && npm run py:virtualStart && npm run py:install"
+        "postinstall": "npm run py:venv && npm run py:virtualStart && npm run py:install",
+        "testGpios": "node --loader ts-node/esm --experimental-specifier-resolution=node --experimental-json-modules --no-warnings ./testGpios.ts"
     },
     "dependencies": {
         "@radix-ui/react-accordion": "^1.1.2",

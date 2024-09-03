@@ -136,7 +136,7 @@ export const disableGpio = async (pinKey: PinKey) => {
     })
 }
 
-export const handleRelaiChanges = (configData: Data) => {
+export const handleRelaiChanges = (configData: Data, hasError: boolean) => {
     //  activate fan
     const fan = configData.generall.fan
     fan.current && fan.active && fan.sensor
@@ -160,7 +160,9 @@ export const handleRelaiChanges = (configData: Data) => {
     plants.forEach((plant) => {
         const sensorLabel = plant.pumpSensor!
 
-        const senroKey = pinList[sensorLabel]
+        // disable all pumps if error
+        if (hasError) return disableGpio(sensorLabel)
+
         plant.waterOn ? enableGpio(sensorLabel) : disableGpio(sensorLabel)
     })
 }
