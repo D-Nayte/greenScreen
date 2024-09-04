@@ -11,7 +11,8 @@ const backendCount = parseInt(parseInt(process.env.BACKEND_INSTANCES)) || 1
 const app = [
     {
         name: 'app',
-        script: 'scripts/pm2StartApp.js',
+        script: 'dist/server.js',
+        args: '--prod',
         max_memory_restart: '1000M', // Anwendung wird neu gestartet, wenn sie 500MB Speicher verbraucht
         // cwd: 'frontend',
         // instances: 1,

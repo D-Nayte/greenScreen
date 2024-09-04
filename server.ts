@@ -25,16 +25,16 @@ import {
     wakeI2C,
     switchAllRelaisOnStart,
     disableRelaiPower,
+    getAllGpioStatus,
 } from './sensor/gipo.js'
 import { logSystemInfo } from './logs/writeLogs.js'
 import { MINUTES_IN_MS } from './utils/constant.js'
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 
 config()
-
+await enablePigpiod()
 await disableRelaiPower()
 await disableI2c()
-await enablePigpiod()
 await enableI2cBus()
 await switchAllRelaisOnStart('enable')
 await switchAllRelaisOnStart('disable')
@@ -153,54 +153,13 @@ app.prepare().then(async () => {
             io.emit('sendData', newData)
         })
 
-        // socket.on('getVideoStream', async () => {
-        //     if (!ffmpeg) {
-        //         ffmpeg = spawn('ffmpeg', [
-        //             '-i',
-        //             '/dev/video0',
-        //             '-vb',
-        //             '1M',
-        //             '-b:v',
-        //             '1M',
-        //             '-video_size',
-        //             '1280x720',
-        //             '-crf',
-        //             '26',
-        //             '-preset',
-        //             'veryfast',
-        //             '-acodec',
-        //             'copy',
-        //             '-f',
-        //             'mjpeg',
-        //             'pipe:1',
-        //             '-loglevel',
-        //             'error',
-        //         ])
-        //     }
-
-        //     ffmpeg.stdout.on('data', (data) => {
-        //         const frame = Buffer.from(data).toString('base64')
-        //         io.emit('sendVideoStream', frame)
-        //     })
-
-        //     ffmpeg.stderr.on('data', (data) => {
-        //         console.error(`ffmpeg stderr: ${data}`)
-        //     })
-
-        //     ffmpeg.on('close', (code) => {
-        //         console.info(`ffmpeg process exited with code ${code}`)
-        //     })
-        //     socket.on('disconnect', () => {
-        //         if (ffmpeg) {
-        //             ffmpeg.kill('SIGINT')
-        //             ffmpeg = null
-        //         }
-        //     })
-        // })
-
         socket.on('getLogs', async () => {
             const logs = await logSystemInfo()
-            socket.emit('sendLogs', logs || 'No logs found')
+            const gpiosStatus = await getAllGpioStatus()
+            const systemInfos =
+                logs + '\n' + '--- GPIO STATUS ---' + '\n' + gpiosStatus
+
+            socket.emit('sendLogs', systemInfos || 'No logs found')
         })
     })
 

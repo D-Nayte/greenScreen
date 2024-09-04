@@ -5,8 +5,10 @@ import { io, Socket } from 'socket.io-client'
 import { ClientToServerEvents, ServerToClientEvents } from '../../server'
 import { Data } from '../../types/sensor'
 
-export const socket: Socket<ServerToClientEvents, ClientToServerEvents> =
-    io(`/`)
+export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+    `/`,
+    { transports: ['websocket'] }
+)
 
 type SocketState = {
     message: string | null

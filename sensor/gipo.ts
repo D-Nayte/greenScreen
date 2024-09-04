@@ -31,10 +31,14 @@ export const enableRelaiPower = async () => {
     if (!isLinux) return console.info('not on linux, mocking relai on')
     const pin = 26
 
-    runCommandPigs(`pigs w ${pin} 0`, (_, err) => {
-        if (err) throw new Error(`Error enabling Relai: ${err}`)
-        console.info(`GPIO wurde ausgeschaltet, Relai ist on `)
-        return
+    return new Promise((res, rej) => {
+        runCommandPigs(`pigs w ${pin} 0`, (_, err) => {
+            if (err)
+                rej(`Error enabling Relai: ${err}, command: pigs w ${pin} 0`)
+            const msg = `GPIO wurde einsgeschaltet, Relai ist off`
+            console.info(msg)
+            res(msg)
+        })
     })
 }
 
@@ -42,9 +46,14 @@ export const disableRelaiPower = async () => {
     if (!isLinux) return console.info('not on linux, mocking relai off')
     const pin = 26
 
-    runCommandPigs(`pigs w ${pin} 1`, (_, err) => {
-        if (err) throw new Error(`Error enabling Relai: ${err}`)
-        console.info(`GPIO wurde einsgeschaltet, Relai ist off`)
+    return new Promise((res, rej) => {
+        runCommandPigs(`pigs w ${pin} 1`, (_, err) => {
+            if (err)
+                rej(`Error enabling Relai: ${err}, command: pigs w ${pin} 0`)
+            const msg = `GPIO wurde einsgeschaltet, Relai ist off`
+            console.info(msg)
+            res(msg)
+        })
     })
 }
 
@@ -52,17 +61,6 @@ export const checkGpioStatus = (pinKey: PinKey) => {
     const pin = pinList[pinKey]
     const command = `pigs r ${pin}`
     return new Promise((resolve, reject) => {
-        // exec(command, (error, stdout, stderr) => {
-        //     if (error) {
-        //         // console.error(`Fehler beim Abfragen des GPIO-Status: ${stderr}`);
-        //         resolve(null)
-        //     } else {
-        //         // 0 bedeutet LOW, 1 bedeutet HIGH
-        //         const status = parseInt(stdout.trim(), 10) === 1
-
-        //         resolve(status)
-        //     }
-        // })
         runCommandPigs(command, (stdout, stderr) => {
             if (stderr) {
                 console.error(`Fehler beim Abfragen des GPIO-Status: ${stderr}`)
@@ -72,6 +70,32 @@ export const checkGpioStatus = (pinKey: PinKey) => {
             resolve(status)
         })
     })
+}
+
+export const getAllGpioStatus = async () => {
+    const pinKeys = Object.keys(pinList) as PinKey[]
+    const statusList = await Promise.all(
+        pinKeys.map(async (key) => {
+            let status: boolean | null = null
+
+            try {
+                status = (await checkGpioStatus(key)) as boolean
+            } catch (error) {
+                console.error(
+                    `Fehler beim Abfragen des GPIO-Status für ${key}: ${error}`
+                )
+            }
+
+            return { [key]: status }
+        })
+    )
+
+    // turn it into a single string with "status key: status"
+    return statusList.reduce((acc, curr) => {
+        const key = Object.keys(curr)[0]
+        const status = curr[key]
+        return `${acc}\nstatus ${key}: ${status}`
+    }, '')
 }
 
 // Funktion zum Ausführen von Shell-Befehlen

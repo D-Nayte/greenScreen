@@ -11,7 +11,7 @@
         "start:old": "npm run build && (npm run start:app&)",
         "start:app": "node ./dist/server.js --prod",
         "prestart": "npm run pm2:kill",
-        "start": "pm2 list && pm2 start ecosystem.config.cjs --env production",
+        "start": "pm2 list && pm2 kill && pm2 start ecosystem.config.cjs --env production",
         "files:copy": "node scripts/copyFiles.js",
         "py:venv": "python3 -m venv pythonVirtual",
         "py:virtualStart": "source pythonVirtual/bin/activate",
@@ -22,7 +22,8 @@
         "pm2:log": "pm2 log",
         "lint": "next lint",
         "postinstall": "npm run py:venv && npm run py:virtualStart && npm run py:install",
-        "testGpios": "node --loader ts-node/esm --experimental-specifier-resolution=node --experimental-json-modules --no-warnings ./testGpios.ts"
+        "testGpios": "node --loader ts-node/esm --experimental-specifier-resolution=node --experimental-json-modules --no-warnings ./testGpios.ts",
+        "testGpioStatus": "node --loader ts-node/esm --experimental-specifier-resolution=node --experimental-json-modules --no-warnings ./testStatusGpio.ts"
     },
     "dependencies": {
         "@radix-ui/react-accordion": "^1.1.2",

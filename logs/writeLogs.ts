@@ -4,14 +4,6 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 
-import {
-    ClientToServerEvents,
-    InterServerEvents,
-    ServerToClientEvents,
-    SocketData,
-} from '../server'
-import { Server } from 'socket.io'
-
 // ESM spezifische Implementierung für __dirname
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
