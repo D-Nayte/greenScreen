@@ -206,16 +206,20 @@ export const enableI2cBus = async () => {
     return new Promise((resolve, _) => {
         const commands = ['sudo modprobe i2c_bcm2708', 'sudo modprobe i2c_dev']
         commands.forEach((command, index) => {
-            runCommand(command, () => {
+            runCommand(command, (_, error) => {
                 if (index === commands.length - 1)
                     return resolve(console.info('I2C Bus wurde aktualisiert'))
+
+                if (error) throw Error(`Failed to enableIC": ${error}`)
             })
         })
     })
 }
 export const wakeI2C = async () => {
     return new Promise((resolve, _) => {
-        runCommand('sudo i2cdetect -y 1', () => {
+        runCommand('sudo i2cdetect -y 1', (_, error) => {
+            if (error) throw Error(`Failed to wakeI2C": ${error}`)
+
             return resolve(console.info('I2C Bus gewekt'))
         })
     })

@@ -89,8 +89,14 @@ const readSensors = async () => {
     try {
         await handleEnvChange(configData, shouldWriteData)
     } catch (error) {
-        hasError = true
-        console.error(error)
+        try {
+            await disableI2c()
+            await enableI2cBus()
+            await wakeI2C()
+        } catch (error) {
+            hasError = true
+            console.error(error)
+        }
     }
 
     try {
